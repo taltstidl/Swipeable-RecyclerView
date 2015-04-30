@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RecyclerViewSlideItemSample</string>
+    <string name="title_activity_sample">SampleActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_delete">Delete</string>
+</resources>

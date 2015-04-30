@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="RecyclerViewSlideItem" >
+        <attr name="slideBackgroundColor" format="color" />
+        <attr name="slideDrawable" format="reference" />
+        <attr name="slideDescription" format="string" />
+        <attr name="slideDescriptionColor" format="color" />
+    </declare-styleable>
+</resources>
