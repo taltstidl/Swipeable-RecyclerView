@@ -1,5 +1,6 @@
 package com.tr4android.recyclerviewslideitemsample;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tr4android.recyclerviewslideitem.SwipeAdapter;
+import com.tr4android.recyclerviewslideitem.SwipeViewHolder;
+
 /**
  * Created by ThomasR on 28.04.2015.
  */
-public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleViewHolder>{
+public class SampleAdapter extends SwipeAdapter{
 
-    public class SampleViewHolder extends RecyclerView.ViewHolder {
+    public class SampleViewHolder extends SwipeViewHolder {
         TextView textView;
 
         public SampleViewHolder(View view) {
@@ -22,15 +26,16 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleView
     }
 
     @Override
-    public SampleViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+    public SampleViewHolder onCreateSwipeViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_sample, parent, false);
+                .inflate(R.layout.item_sample, parent, true);
         SampleViewHolder sampleViewHolder = new SampleViewHolder(v);
         return sampleViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(SampleViewHolder sampleViewHolder, int i) {
+    public void onBindViewHolder(SwipeViewHolder swipeViewHolder, int i) {
+        SampleViewHolder sampleViewHolder = (SampleViewHolder) swipeViewHolder;
         sampleViewHolder.textView.setText("person" + String.valueOf(i) + "@sample.com");
     }
 

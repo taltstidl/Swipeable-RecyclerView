@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -19,7 +18,7 @@ import android.widget.TextView;
 /**
  * Created by ThomasR on 28.04.2015.
  */
-public class RecyclerViewSlideItem extends ViewGroup {
+public class SwipeItem extends ViewGroup {
     private static final String LOG_TAG = "SlideItem";
 
     private final ViewDragHelper mDragHelper;
@@ -40,46 +39,28 @@ public class RecyclerViewSlideItem extends ViewGroup {
 
     private boolean mFirstLayout = true;
 
-    public RecyclerViewSlideItem(Context context) {
+    public SwipeItem(Context context) {
         this(context, null);
     }
 
-    public RecyclerViewSlideItem(Context context, AttributeSet attrs) {
+    public SwipeItem(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RecyclerViewSlideItem(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SwipeItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         // retrieve attributes from xml
         if (attrs != null){
-            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.RecyclerViewSlideItem);
+            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SwipeItem);
             if (ta != null){
-                mSlideBackgroundColor = ta.getColor(R.styleable.RecyclerViewSlideItem_slideBackgroundColor, Color.TRANSPARENT);
-                mSlideDrawable = ta.getDrawable(R.styleable.RecyclerViewSlideItem_slideDrawable);
-                mSlideDescription = ta.getString(R.styleable.RecyclerViewSlideItem_slideDescription);
-                mSlideDescriptionColor = ta.getColor(R.styleable.RecyclerViewSlideItem_slideDescriptionColor, Color.BLACK);
+                mSlideBackgroundColor = ta.getColor(R.styleable.SwipeItem_slideBackgroundColor, Color.TRANSPARENT);
+                mSlideDrawable = ta.getDrawable(R.styleable.SwipeItem_slideDrawable);
+                mSlideDescription = ta.getString(R.styleable.SwipeItem_slideDescription);
+                mSlideDescriptionColor = ta.getColor(R.styleable.SwipeItem_slideDescriptionColor, Color.BLACK);
             }
             ta.recycle();
         }
-
-        // inflate slide view
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View slideInfo = inflater.inflate(R.layout.item_slide_info, null);
-
-        // set attributes to slide view
-        slideInfo.setBackgroundColor(mSlideBackgroundColor);
-        ImageView imageViewLeft = (ImageView) slideInfo.findViewById(R.id.imageViewLeft);
-        imageViewLeft.setImageDrawable(mSlideDrawable);
-        ImageView imageViewRight = (ImageView) slideInfo.findViewById(R.id.imageViewRight);
-        imageViewRight.setImageDrawable(mSlideDrawable);
-        TextView textViewDescription = (TextView) slideInfo.findViewById(R.id.textViewDescription);
-        textViewDescription.setText(mSlideDescription);
-        textViewDescription.setTextColor(mSlideDescriptionColor);
-
-        // add slide view
-        addViewInLayout(slideInfo, 0, generateDefaultLayoutParams(), true);
 
         mDragHelper = ViewDragHelper.create(this, new DragHelperCallback());
     }
@@ -156,6 +137,23 @@ public class RecyclerViewSlideItem extends ViewGroup {
         }
     }
 
+    public void setSwipeBackgroundColor(int resolvedColor) {
+        mSlideInfo.setBackgroundColor(resolvedColor);
+    }
+
+    public void setSwipeImageResource(int resId) {
+        ((ImageView) mSlideInfo.findViewById(R.id.imageViewLeft)).setImageResource(resId);
+        ((ImageView) mSlideInfo.findViewById(R.id.imageViewRight)).setImageResource(resId);
+    }
+
+    public void setSwipeDescription(CharSequence description) {
+        ((TextView) mSlideInfo.findViewById(R.id.textViewDescription)).setText(description);
+    }
+
+    public void setSwipeDescriptionTextColor(int resolvedTextColor) {
+        ((TextView) mSlideInfo.findViewById(R.id.textViewDescription)).setTextColor(resolvedTextColor);
+    }
+
     private class DragHelperCallback extends ViewDragHelper.Callback {
 
         @Override
@@ -193,7 +191,7 @@ public class RecyclerViewSlideItem extends ViewGroup {
 
     @Override
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new RecyclerViewSlideItem.LayoutParams(getContext(), attrs);
+        return new SwipeItem.LayoutParams(getContext(), attrs);
     }
 
     @Override

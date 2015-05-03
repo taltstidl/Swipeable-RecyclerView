@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="RecyclerViewSlideItem" >
+    <declare-styleable name="SwipeItem" >
         <attr name="slideBackgroundColor" format="color" />
         <attr name="slideDrawable" format="reference" />
         <attr name="slideDescription" format="string" />
