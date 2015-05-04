@@ -6,7 +6,7 @@
     android:orientation="horizontal">
 
     <View
-        android:background="@drawable/circle_grey"
+        android:id="@+id/avatarView"
         android:layout_height="40dp"
         android:layout_margin="16dp"
         android:layout_width="40dp" />

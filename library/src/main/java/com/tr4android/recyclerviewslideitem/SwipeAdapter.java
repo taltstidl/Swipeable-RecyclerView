@@ -1,40 +1,56 @@
 package com.tr4android.recyclerviewslideitem;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 /**
  * Created by ThomasR on 03.05.2015.
  */
-public class SwipeAdapter extends RecyclerView.Adapter<SwipeViewHolder> {
+public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    RecyclerView mRecyclerView;
+
+    public SwipeAdapter(RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
+    }
 
     @Override
-    public SwipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         SwipeItem item = (SwipeItem) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_swipe, parent, false);
-        SwipeViewHolder holder = onCreateSwipeViewHolder(item, viewType);
+        RecyclerView.ViewHolder holder = onCreateSwipeViewHolder(item, viewType);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(SwipeViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        final SwipeItem swipeItem = (SwipeItem) holder.itemView;
+        SwipeConfiguration configuration = onCreateSwipeConfiguration(position);
+        swipeItem.setSwipeConfiguration(configuration);
+        swipeItem.setSwipeListener(new SwipeItem.SwipeListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onSwipeLeft() {
+                Log.i("Swipe", "Left");
+                onSwipe(holder.getPosition());
+            }
 
+            @Override
+            public void onSwipeRight() {
+                Log.i("Swipe", "Right");
+                onSwipe(holder.getPosition());
+            }
+        });
     }
 
-    public SwipeViewHolder onCreateSwipeViewHolder(ViewGroup parent, int viewType) {
-        return null;
-    }
+    public abstract RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int viewType);
 
     @Override
-    public int getItemCount() {
-        return 0;
-    }
+    public abstract int getItemCount();
 
-    public void onCreateSwipe(int position) {
+    public abstract SwipeConfiguration onCreateSwipeConfiguration(int position);
 
-    }
+    public abstract void onSwipe(int position);
 }

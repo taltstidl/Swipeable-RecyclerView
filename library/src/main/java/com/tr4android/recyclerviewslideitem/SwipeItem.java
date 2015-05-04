@@ -1,14 +1,9 @@
 package com.tr4android.recyclerviewslideitem;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,23 +14,17 @@ import android.widget.TextView;
  * Created by ThomasR on 28.04.2015.
  */
 public class SwipeItem extends ViewGroup {
-    private static final String LOG_TAG = "SlideItem";
+    private static final String LOG_TAG = "SwipeItem";
 
     private final ViewDragHelper mDragHelper;
 
+    private SwipeListener mSwipeListener;
+
     private int mHorizontalDragRange;
 
-    private View mSlideItem;
+    private View mSwipeItem;
 
-    private View mSlideInfo;
-
-    private int mSlideBackgroundColor;
-
-    private Drawable mSlideDrawable;
-
-    private String mSlideDescription;
-
-    private int mSlideDescriptionColor;
+    private View mSwipeInfo;
 
     private boolean mFirstLayout = true;
 
@@ -49,18 +38,6 @@ public class SwipeItem extends ViewGroup {
 
     public SwipeItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        // retrieve attributes from xml
-        if (attrs != null){
-            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SwipeItem);
-            if (ta != null){
-                mSlideBackgroundColor = ta.getColor(R.styleable.SwipeItem_slideBackgroundColor, Color.TRANSPARENT);
-                mSlideDrawable = ta.getDrawable(R.styleable.SwipeItem_slideDrawable);
-                mSlideDescription = ta.getString(R.styleable.SwipeItem_slideDescription);
-                mSlideDescriptionColor = ta.getColor(R.styleable.SwipeItem_slideDescriptionColor, Color.BLACK);
-            }
-            ta.recycle();
-        }
 
         mDragHelper = ViewDragHelper.create(this, new DragHelperCallback());
     }
@@ -88,17 +65,17 @@ public class SwipeItem extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // measure child
-        mSlideInfo = getChildAt(0);
-        mSlideItem = getChildAt(1);
-        measureChildWithMargins(mSlideInfo, widthMeasureSpec, 0, heightMeasureSpec, 0);
-        measureChildWithMargins(mSlideItem, widthMeasureSpec, 0, heightMeasureSpec, 0);
+        mSwipeInfo = getChildAt(0);
+        mSwipeItem = getChildAt(1);
+        measureChildWithMargins(mSwipeInfo, widthMeasureSpec, 0, heightMeasureSpec, 0);
+        measureChildWithMargins(mSwipeItem, widthMeasureSpec, 0, heightMeasureSpec, 0);
         
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-        setMeasuredDimension(widthSize, mSlideItem.getMeasuredHeight());
+        setMeasuredDimension(widthSize, mSwipeItem.getMeasuredHeight());
     }
 
     @Override
@@ -112,8 +89,8 @@ public class SwipeItem extends ViewGroup {
 
             mHorizontalDragRange = getMeasuredWidth();
 
-            mSlideInfo.layout(parentLeft, parentTop, parentRight, parentTop + mSlideItem.getMeasuredHeight());
-            mSlideItem.layout(parentLeft, parentTop, parentRight, parentTop + mSlideItem.getMeasuredHeight());
+            mSwipeInfo.layout(parentLeft, parentTop, parentRight, parentTop + mSwipeItem.getMeasuredHeight());
+            mSwipeItem.layout(parentLeft, parentTop, parentRight, parentTop + mSwipeItem.getMeasuredHeight());
             mFirstLayout = false;
         }
     }
@@ -132,33 +109,67 @@ public class SwipeItem extends ViewGroup {
     @Override
     public void computeScroll() {
         if (mDragHelper != null && mDragHelper.continueSettling(true)) {
-            Log.i(LOG_TAG, "View scrolled");
             ViewCompat.postInvalidateOnAnimation(this);
         }
     }
 
     public void setSwipeBackgroundColor(int resolvedColor) {
-        mSlideInfo.setBackgroundColor(resolvedColor);
+        mSwipeInfo.setBackgroundColor(resolvedColor);
     }
 
     public void setSwipeImageResource(int resId) {
-        ((ImageView) mSlideInfo.findViewById(R.id.imageViewLeft)).setImageResource(resId);
-        ((ImageView) mSlideInfo.findViewById(R.id.imageViewRight)).setImageResource(resId);
+        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewLeft)).setImageResource(resId);
+        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewRight)).setImageResource(resId);
     }
 
     public void setSwipeDescription(CharSequence description) {
-        ((TextView) mSlideInfo.findViewById(R.id.textViewDescription)).setText(description);
+        ((TextView) mSwipeInfo.findViewById(R.id.textViewDescription)).setText(description);
     }
 
     public void setSwipeDescriptionTextColor(int resolvedTextColor) {
-        ((TextView) mSlideInfo.findViewById(R.id.textViewDescription)).setTextColor(resolvedTextColor);
+        ((TextView) mSwipeInfo.findViewById(R.id.textViewDescription)).setTextColor(resolvedTextColor);
+    }
+
+    public void setSwipeConfiguration(SwipeConfiguration configuration) {
+        mSwipeInfo = getChildAt(0);
+        setSwipeImageResource(configuration.getDrawableResId());
+        setSwipeDescription(configuration.getDescription());
+        setSwipeDescriptionTextColor(configuration.getDescriptionTextColor());
+        setSwipeBackgroundColor(configuration.getBackgroundColor());
+    }
+
+    public void setSwipeListener(SwipeListener listener) {
+        mSwipeListener = listener;
+    }
+
+    public interface SwipeListener {
+        /**
+         * Called when the SwipeItem was swiped away to the left
+         */
+        public void onSwipeLeft();
+        /**
+         * Called when the SwipeItem was swiped away to the right
+         */
+        public void onSwipeRight();
+    }
+
+    void dispatchOnSwipeLeft() {
+        if (mSwipeListener != null) {
+            mSwipeListener.onSwipeLeft();
+        }
+    }
+
+    void dispatchOnSwipeRight() {
+        if (mSwipeListener != null) {
+            mSwipeListener.onSwipeRight();
+        }
     }
 
     private class DragHelperCallback extends ViewDragHelper.Callback {
 
         @Override
         public boolean tryCaptureView(View view, int i) {
-            return view == mSlideItem;
+            return view == mSwipeItem;
         }
 
         @Override
@@ -169,6 +180,17 @@ public class SwipeItem extends ViewGroup {
         @Override
         public int getViewVerticalDragRange(View child) {
             return mHorizontalDragRange;
+        }
+
+        @Override
+        public void onViewDragStateChanged(int state) {
+            if (state == ViewDragHelper.STATE_IDLE) {
+                if (mSwipeItem.getLeft() == -mHorizontalDragRange) {
+                    dispatchOnSwipeLeft();
+                } else if (mSwipeItem.getLeft() == mHorizontalDragRange) {
+                    dispatchOnSwipeRight();
+                }
+            }
         }
 
         @Override
