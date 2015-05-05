@@ -291,7 +291,7 @@ public class SwipeConfiguration {
             config.setLeftDismissable(mLeftDismissable);
             config.setRightDismissable(mRightDismissable);
             config.setLeftUndoable(mLeftUndoable);
-            config.setLeftUndoable(mRightUndoable);
+            config.setRightUndoable(mRightUndoable);
             config.setLeftUndoDescription(mLeftUndoDescription);
             config.setRightUndoDescription(mRightUndoDescription);
             return config;
