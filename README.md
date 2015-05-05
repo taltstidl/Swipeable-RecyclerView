@@ -1,20 +1,23 @@
 # Swipeable-RecyclerView
 A library that provides an easy and customizable way to implement a swipe to dismiss pattern with RecyclerView.
 
-**Note:** This library is currently in its infancy and thus shouldn't be used in production versions as of yet. If you are comfortable experimenting with this library though feel free to give it a spin and report any issues you find.
+**Note:** This library is currently in its infancy and thus shouldn't be used in production versions as of yet. If you are comfortable experimenting with this library though feel free to give it a spin and report any issues you find. A list of issues currently on the roadmap can be found [here](https://github.com/TR4Android/Swipeable-RecyclerView/issues).
 
 ## Usage
 ### Importing the library
 
-This library will make it to maven eventually, but since it currently isn't ready you'll have to build it yourself by cloning or downloading this repo.
+This library will make it to maven eventually, but since it currently is in active development you'll have to build it yourself by cloning or downloading this repo.
 
 ### Code Setup
 
 To be able to use the swipe to dismiss pattern in your RecyclerView you'll have to extend the `SwipeAdapter` in your Adapter class. After that there are only a few minor changes you have to do to get everything going:
 
-* Use `onCreateSwipeViewHolder(ViewGroup parent, int viewType)` instead of the usual `onCreateViewHolder(ViewGroup parent, int viewType)`. This is needed to wrap your list item in a ViewGroup that handles swiping (namely `SwipeItem`). I additon to that you'll also have to replace the boolean `attachToRoot` with `true` so your list item gets attached to the wrapping ViewGroup.
+##### Migrating from normal adapter
+Override `onCreateSwipeViewHolder(ViewGroup parent, int viewType)` and `onBindSwipeViewHolder(ViewHolder holder, int position)` instead of the usual `onCreateViewHolder(ViewGroup parent, int viewType)` and `onBindViewHolder(ViewHolder holder, int position)`. This is needed to wrap your list item in a ViewGroup that handles swiping (namely `SwipeItem`) and handle its configuration. I additon to that you'll also have to replace the boolean `attachToRoot` with `true` so your list item gets attached to the wrapping SwipeItem.
 A full implementation might look something like this:
 ``` java
+public class SampleAdapter extends SwipeAdapter {
+...
 @Override
     public RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext())
@@ -22,10 +25,17 @@ A full implementation might look something like this:
         SampleViewHolder sampleViewHolder = new SampleViewHolder(v);
         return sampleViewHolder;
     }
+    
+@Override
+    public void onBindSwipeViewHolder(RecyclerView.ViewHolder holder, int position) {
+        // handle data
+    }
+...
+}
 ```
-* Make sure you call `super.onBindViewHolder(holder, position)` in your `onBindViewHolder(ViewHolder holder, int position)` implementation. This is needed so the `SwipeAdapter` can handle the state of the swipe items.
 
-There also are some new methods related to the swiping pattern in the `SwipeAdapter` that you'll have to override. Those are:
+##### Special setup for swipeable adapter
+There are some new methods related to the swiping pattern in the `SwipeAdapter` that you'll have to override. Those are:
 
 * `onCreateSwipeConfiguration(int position)`: This is used to determine the configuration of a particular list item and allows flexible control on a per item basis. You'll have to return a `SwipeConfiguration`. An implementation might look like this (More customisation options can be found below):
 ``` java
