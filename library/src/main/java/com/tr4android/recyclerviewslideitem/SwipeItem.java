@@ -30,9 +30,7 @@ public class SwipeItem extends ViewGroup {
 
     private View mSwipeInfo;
 
-    private boolean mUndoable;
-
-    private boolean mUndone;
+    private SwipeConfiguration mConfiguration;
 
     private boolean mFirstLayout = true;
 
@@ -131,23 +129,20 @@ public class SwipeItem extends ViewGroup {
         ((TextView) mSwipeInfo.findViewById(R.id.textViewDescription)).setText(description);
     }
 
+    public void setSwipeUndoDescription(CharSequence description) {
+        ((TextView) mSwipeInfo.findViewById(R.id.undoDescription)).setText(description);
+    }
+
     public void setSwipeDescriptionTextColor(int resolvedTextColor) {
         ((TextView) mSwipeInfo.findViewById(R.id.textViewDescription)).setTextColor(resolvedTextColor);
         ((TextView) mSwipeInfo.findViewById(R.id.undoDescription)).setTextColor(resolvedTextColor);
         ((TextView) mSwipeInfo.findViewById(R.id.undoButton)).setTextColor(resolvedTextColor);
     }
 
-    public void setSwipeUndoable(boolean undoable) {
-        mUndoable = undoable;
-    }
-
     public void setSwipeConfiguration(SwipeConfiguration configuration) {
         mSwipeInfo = getChildAt(0);
-        setSwipeImageResource(configuration.getDrawableResId());
-        setSwipeDescription(configuration.getDescription());
-        setSwipeDescriptionTextColor(configuration.getDescriptionTextColor());
-        setSwipeBackgroundColor(configuration.getBackgroundColor());
-        setSwipeUndoable(configuration.getUndoable());
+        mConfiguration = configuration;
+        // TODO: handle configuration here if equal in both directions
     }
 
     public void setSwipeListener(SwipeListener listener) {
@@ -207,6 +202,11 @@ public class SwipeItem extends ViewGroup {
         }
 
         @Override
+        public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
+            handlePositionChange(left);
+        }
+
+        @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             // logic for slide behaviour
             if (xvel < 0) {
@@ -223,9 +223,26 @@ public class SwipeItem extends ViewGroup {
             invalidate();
         }
     }
+    
+    private void handlePositionChange(int newLeft) {
+        if (newLeft < 0) {
+            // show right action
+            setSwipeBackgroundColor(mConfiguration.getRightBackgroundColor());
+            setSwipeImageResource(mConfiguration.getRightDrawableResId());
+            setSwipeDescription(mConfiguration.getRightDescription());
+            setSwipeDescriptionTextColor(mConfiguration.getRightDescriptionTextColor());
+        } else {
+            // show left action
+            setSwipeBackgroundColor(mConfiguration.getLeftBackgroundColor());
+            setSwipeImageResource(mConfiguration.getLeftDrawableResId());
+            setSwipeDescription(mConfiguration.getLeftDescription());
+            setSwipeDescriptionTextColor(mConfiguration.getLeftDescriptionTextColor());
+        }
+    }
 
     private void handleLeftSwipe() {
-        if (mUndoable) {
+        if (mConfiguration.isLeftUndoable()) {
+            setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
             final Handler handler = new Handler();
             final Runnable removeItemRunnable = new Runnable() {
                 @Override
@@ -250,7 +267,8 @@ public class SwipeItem extends ViewGroup {
     }
 
     private void handleRightSwipe() {
-        if (mUndoable) {
+        setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
+        if (mConfiguration.isRightUndoable()) {
             final Handler handler = new Handler();
             final Runnable removeItemRunnable = new Runnable() {
                 @Override

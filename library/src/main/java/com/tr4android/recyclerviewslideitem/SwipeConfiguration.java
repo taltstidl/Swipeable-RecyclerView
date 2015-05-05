@@ -150,7 +150,7 @@ public class SwipeConfiguration {
     /**
      * Builder class for building SwipeConfiguration
      */
-    public class Builder {
+    public static class Builder {
         private int mLeftDrawableResId = 0;
         private int mRightDrawableResId = 0;
         private CharSequence mLeftDescription;

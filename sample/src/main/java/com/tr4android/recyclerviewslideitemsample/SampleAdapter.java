@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,12 +62,13 @@ public class SampleAdapter extends SwipeAdapter {
 
     @Override
     public SwipeConfiguration onCreateSwipeConfiguration(int position) {
-        SwipeConfiguration configuration = new SwipeConfiguration();
-        configuration.setBackgroundColor(mContext.getResources().getColor(R.color.color_delete));
-        configuration.setDescription(mContext.getResources().getString(R.string.action_delete));
-        configuration.setDescriptionTextColor(mContext.getResources().getColor(android.R.color.white));
-        configuration.setDrawableResId(R.drawable.ic_delete_white_24dp);
-        return configuration;
+        return new SwipeConfiguration.Builder()
+                .setBackgroundColor(mContext.getResources().getColor(R.color.color_delete))
+                .setDrawableResId(R.drawable.ic_delete_white_24dp)
+                .setUndoable(true)
+                .setUndoDescription(mContext.getResources().getString(R.string.action_deleted))
+                .setDescriptionTextColor(mContext.getResources().getColor(android.R.color.white))
+                .build();
     }
 
     @Override
