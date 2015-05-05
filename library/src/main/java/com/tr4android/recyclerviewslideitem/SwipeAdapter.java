@@ -10,14 +10,9 @@ import android.view.ViewGroup;
  * Created by ThomasR on 03.05.2015.
  */
 public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    RecyclerView mRecyclerView;
-
-    public SwipeAdapter(RecyclerView recyclerView) {
-        mRecyclerView = recyclerView;
-    }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         SwipeItem item = (SwipeItem) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_swipe, parent, false);
         RecyclerView.ViewHolder holder = onCreateSwipeViewHolder(item, viewType);
@@ -25,7 +20,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public final void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final SwipeItem swipeItem = (SwipeItem) holder.itemView;
         SwipeConfiguration configuration = onCreateSwipeConfiguration(position);
         swipeItem.setSwipeConfiguration(configuration);
@@ -33,19 +28,20 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             @SuppressLint("NewApi")
             @Override
             public void onSwipeLeft() {
-                Log.i("Swipe", "Left");
                 onSwipe(holder.getPosition());
             }
 
             @Override
             public void onSwipeRight() {
-                Log.i("Swipe", "Right");
                 onSwipe(holder.getPosition());
             }
         });
+        onBindSwipeViewHolder(holder, position);
     }
 
     public abstract RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int viewType);
+
+    public abstract void onBindSwipeViewHolder(RecyclerView.ViewHolder holder, final int position);
 
     @Override
     public abstract int getItemCount();
