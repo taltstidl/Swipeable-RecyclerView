@@ -20,20 +20,21 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Override
-    public final void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        final SwipeItem swipeItem = (SwipeItem) holder.itemView;
+    public final void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        final RecyclerView.ViewHolder swipeHolder = holder;
+        final SwipeItem swipeItem = (SwipeItem) swipeHolder.itemView;
         SwipeConfiguration configuration = onCreateSwipeConfiguration(position);
         swipeItem.setSwipeConfiguration(configuration);
         swipeItem.setSwipeListener(new SwipeItem.SwipeListener() {
             @SuppressLint("NewApi")
             @Override
             public void onSwipeLeft() {
-                onSwipe(holder.getPosition());
+                onSwipe(swipeHolder.getPosition());
             }
 
             @Override
             public void onSwipeRight() {
-                onSwipe(holder.getPosition());
+                onSwipe(swipeHolder.getPosition());
             }
         });
         onBindSwipeViewHolder(holder, position);

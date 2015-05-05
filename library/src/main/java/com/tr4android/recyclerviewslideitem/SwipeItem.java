@@ -1,9 +1,13 @@
 package com.tr4android.recyclerviewslideitem;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorCompat;
+import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +29,10 @@ public class SwipeItem extends ViewGroup {
     private View mSwipeItem;
 
     private View mSwipeInfo;
+
+    private boolean mUndoable;
+
+    private boolean mUndone;
 
     private boolean mFirstLayout = true;
 
@@ -69,23 +77,20 @@ public class SwipeItem extends ViewGroup {
         mSwipeItem = getChildAt(1);
         measureChildWithMargins(mSwipeInfo, widthMeasureSpec, 0, heightMeasureSpec, 0);
         measureChildWithMargins(mSwipeItem, widthMeasureSpec, 0, heightMeasureSpec, 0);
-        
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-        setMeasuredDimension(widthSize, mSwipeItem.getMeasuredHeight());
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), mSwipeItem.getMeasuredHeight());
+
+        mSwipeInfo.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
+        mSwipeItem.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        if(mFirstLayout) {
+        if (mFirstLayout) {
             final int parentLeft = getPaddingLeft();
             final int parentRight = right - left - getPaddingRight();
 
             final int parentTop = getPaddingTop();
-            final int parentBottom = bottom - top - getPaddingBottom();
 
             mHorizontalDragRange = getMeasuredWidth();
 
@@ -128,6 +133,12 @@ public class SwipeItem extends ViewGroup {
 
     public void setSwipeDescriptionTextColor(int resolvedTextColor) {
         ((TextView) mSwipeInfo.findViewById(R.id.textViewDescription)).setTextColor(resolvedTextColor);
+        ((TextView) mSwipeInfo.findViewById(R.id.undoDescription)).setTextColor(resolvedTextColor);
+        ((TextView) mSwipeInfo.findViewById(R.id.undoButton)).setTextColor(resolvedTextColor);
+    }
+
+    public void setSwipeUndoable(boolean undoable) {
+        mUndoable = undoable;
     }
 
     public void setSwipeConfiguration(SwipeConfiguration configuration) {
@@ -136,6 +147,7 @@ public class SwipeItem extends ViewGroup {
         setSwipeDescription(configuration.getDescription());
         setSwipeDescriptionTextColor(configuration.getDescriptionTextColor());
         setSwipeBackgroundColor(configuration.getBackgroundColor());
+        setSwipeUndoable(configuration.getUndoable());
     }
 
     public void setSwipeListener(SwipeListener listener) {
@@ -147,6 +159,7 @@ public class SwipeItem extends ViewGroup {
          * Called when the SwipeItem was swiped away to the left
          */
         public void onSwipeLeft();
+
         /**
          * Called when the SwipeItem was swiped away to the right
          */
@@ -178,7 +191,7 @@ public class SwipeItem extends ViewGroup {
         }
 
         @Override
-        public int getViewVerticalDragRange(View child) {
+        public int getViewHorizontalDragRange(View child) {
             return mHorizontalDragRange;
         }
 
@@ -186,9 +199,9 @@ public class SwipeItem extends ViewGroup {
         public void onViewDragStateChanged(int state) {
             if (state == ViewDragHelper.STATE_IDLE) {
                 if (mSwipeItem.getLeft() == -mHorizontalDragRange) {
-                    dispatchOnSwipeLeft();
+                    handleLeftSwipe();
                 } else if (mSwipeItem.getLeft() == mHorizontalDragRange) {
-                    dispatchOnSwipeRight();
+                    handleRightSwipe();
                 }
             }
         }
@@ -209,6 +222,107 @@ public class SwipeItem extends ViewGroup {
 
             invalidate();
         }
+    }
+
+    private void handleLeftSwipe() {
+        if (mUndoable) {
+            final Handler handler = new Handler();
+            final Runnable removeItemRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    dispatchOnSwipeLeft();
+                }
+            };
+            handler.postDelayed(removeItemRunnable, 5000); // 5 sec to undo
+            showUndoAction(true);
+            mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handler.removeCallbacks(removeItemRunnable);
+                    showUndoAction(false);
+                    mSwipeInfo.setOnClickListener(null);
+                    swipeBack();
+                }
+            });
+        } else {
+            dispatchOnSwipeLeft();
+        }
+    }
+
+    private void handleRightSwipe() {
+        if (mUndoable) {
+            final Handler handler = new Handler();
+            final Runnable removeItemRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    dispatchOnSwipeRight();
+                }
+            };
+            handler.postDelayed(removeItemRunnable, 5000); // 5 sec to undo
+            showUndoAction(true);
+            mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handler.removeCallbacks(removeItemRunnable);
+                    showUndoAction(false);
+                    mSwipeInfo.setOnClickListener(null);
+                    swipeBack();
+                }
+            });
+        } else {
+            dispatchOnSwipeRight();
+        }
+    }
+
+    private void swipeBack() {
+        if (mDragHelper.smoothSlideViewTo(mSwipeItem, 0, mSwipeItem.getTop())) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
+    }
+
+    private void showUndoAction(final boolean show) {
+        View undoItem = mSwipeInfo.findViewById(R.id.undoLayout);
+        View infoItem = mSwipeInfo.findViewById(R.id.infoLayout);
+        ViewCompat.setAlpha(undoItem, show ? 0 : 1);
+        ViewCompat.setAlpha(infoItem, show ? 1 : 0);
+        if(show) undoItem.setVisibility(VISIBLE);
+        if(!show) infoItem.setVisibility(VISIBLE);
+        final ViewPropertyAnimatorCompat undoAnimation = ViewCompat.animate(undoItem);
+        undoAnimation.setDuration(300)
+                .alpha(show ? 1 : 0).setListener(new ViewPropertyAnimatorListener() {
+            @Override
+            public void onAnimationStart(View view) {
+            }
+
+            @Override
+            public void onAnimationEnd(View view) {
+                undoAnimation.setListener(null);
+                ViewCompat.setAlpha(view, show ? 1 : 0);
+                if(!show) view.setVisibility(INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(View view) {
+            }
+        }).start();
+        final ViewPropertyAnimatorCompat infoAnimation = ViewCompat.animate(infoItem);
+        infoAnimation.setDuration(300)
+                .alpha(show ? 0 : 1).setListener(new ViewPropertyAnimatorListener() {
+            @Override
+            public void onAnimationStart(View view) {
+            }
+
+            @Override
+            public void onAnimationEnd(View view) {
+                infoAnimation.setListener(null);
+                ViewCompat.setAlpha(view, show ? 0 : 1);
+                if (show) view.setVisibility(INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(View view) {
+            }
+        }).start();
     }
 
     @Override

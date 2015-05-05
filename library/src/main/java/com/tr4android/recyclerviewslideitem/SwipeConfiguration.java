@@ -298,3 +298,4 @@ public class SwipeConfiguration {
         }
     }
 }
+
