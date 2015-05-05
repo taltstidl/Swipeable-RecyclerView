@@ -39,14 +39,14 @@ There are some new methods related to the swiping pattern in the `SwipeAdapter` 
 
 * `onCreateSwipeConfiguration(int position)`: This is used to determine the configuration of a particular list item and allows flexible control on a per item basis. You'll have to return a `SwipeConfiguration`. An implementation might look like this (More customisation options can be found below):
 ``` java
-@Override
+    @Override
     public SwipeConfiguration onCreateSwipeConfiguration(int position) {
-        SwipeConfiguration.Builder builder = new SwipeConfiguration.Builder();
-        builder.setBackgroundColor(mContext.getResources().getColor(R.color.color_delete));
-        builder.setDescription(mContext.getResources().getString(R.string.action_delete));
-        builder.setDescriptionTextColor(mContext.getResources().getColor(android.R.color.white));
-        builder.setDrawableResId(R.drawable.ic_delete_white_24dp);
-        return builder.build();
+        return new SwipeConfiguration.Builder()          
+            .setBackgroundColor(mContext.getResources().getColor(R.color.color_delete))
+            .setDescription(mContext.getResources().getString(R.string.action_delete))
+            .setDescriptionTextColor(mContext.getResources().getColor(android.R.color.white))
+            .setDrawableResId(R.drawable.ic_delete_white_24dp);
+            .build();
     }
 ```
 * `onSwipe(int position)`: This gets called whenever an item is removed using a swipe. You have to call `notifyItemRemoved(position)` there after changing you data.
