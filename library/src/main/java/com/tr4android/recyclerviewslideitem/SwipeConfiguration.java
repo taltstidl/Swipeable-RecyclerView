@@ -14,6 +14,8 @@ public class SwipeConfiguration {
     int mBackgroundColor;
     // whether or not dismissing is allowed
     boolean mDismissable = true;
+    // whether or not action is undoable
+    boolean mUndoable = true;
 
     public void setDrawableResId(int resId) {
         mDrawableResId = resId;
@@ -35,6 +37,10 @@ public class SwipeConfiguration {
         mDismissable = dismissable;
     }
 
+    public void setUndoable(boolean undoable) {
+        mUndoable = undoable;
+    }
+
     public int getDrawableResId() {
         return mDrawableResId;
     }
@@ -53,5 +59,9 @@ public class SwipeConfiguration {
 
     public boolean getDismissable() {
         return mDismissable;
+    }
+
+    public boolean getUndoable() {
+        return mUndoable;
     }
 }

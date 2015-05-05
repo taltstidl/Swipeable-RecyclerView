@@ -3,8 +3,8 @@ package com.tr4android.recyclerviewslideitemsample;
 import android.content.Context;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +25,6 @@ public class SampleAdapter extends SwipeAdapter {
     private Context mContext;
 
     public SampleAdapter(Context context, RecyclerView recyclerView) {
-        super(recyclerView);
         mContext = context;
         // create dummy dataset
         mDataset = new ArrayList<>();
@@ -54,8 +53,7 @@ public class SampleAdapter extends SwipeAdapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder swipeViewHolder, int i) {
-        super.onBindViewHolder(swipeViewHolder, i);
+    public void onBindSwipeViewHolder(RecyclerView.ViewHolder swipeViewHolder, int i) {
         SampleViewHolder sampleViewHolder = (SampleViewHolder) swipeViewHolder;
         ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
         drawable.getPaint().setColor(mContext.getResources().getColor(colors[((int) (Math.random() * (colors.length - 1)))]));
