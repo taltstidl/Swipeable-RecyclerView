@@ -13,7 +13,7 @@ This library will make it to maven eventually, but since it currently is in acti
 To be able to use the swipe to dismiss pattern in your RecyclerView you'll have to extend the `SwipeAdapter` in your Adapter class. After that there are only a few minor changes you have to do to get everything going:
 
 ##### Migrating from normal adapter
-Override `onCreateSwipeViewHolder(ViewGroup parent, int viewType)` and `onBindSwipeViewHolder(ViewHolder holder, int position)` instead of the usual `onCreateViewHolder(ViewGroup parent, int viewType)` and `onBindViewHolder(ViewHolder holder, int position)`. This is needed to wrap your list item in a ViewGroup that handles swiping (namely `SwipeItem`) and handle its configuration. I additon to that you'll also have to replace the boolean `attachToRoot` with `true` so your list item gets attached to the wrapping SwipeItem.
+Override `onCreateSwipeViewHolder(ViewGroup parent, int viewType)` and `onBindSwipeViewHolder(ViewHolder holder, int position)` instead of the usual `onCreateViewHolder(ViewGroup parent, int viewType)` and `onBindViewHolder(ViewHolder holder, int position)`. This is needed to wrap your list item in a ViewGroup that handles swiping (namely `SwipeItem`) and handle its configuration. In additon to that you'll also have to replace the boolean `attachToRoot` with `true` so your list item gets attached to the wrapping SwipeItem.
 A full implementation might look something like this:
 ``` java
 public class SampleAdapter extends SwipeAdapter {
@@ -39,14 +39,14 @@ There are some new methods related to the swiping pattern in the `SwipeAdapter` 
 
 * `onCreateSwipeConfiguration(int position)`: This is used to determine the configuration of a particular list item and allows flexible control on a per item basis. You'll have to return a `SwipeConfiguration`. An implementation might look like this (More customisation options can be found below):
 ``` java
-@Override
+    @Override
     public SwipeConfiguration onCreateSwipeConfiguration(int position) {
-        SwipeConfiguration configuration = new SwipeConfiguration();
-        configuration.setBackgroundColor(mContext.getResources().getColor(R.color.color_delete));
-        configuration.setDescription(mContext.getResources().getString(R.string.action_delete));
-        configuration.setDescriptionTextColor(mContext.getResources().getColor(android.R.color.white));
-        configuration.setDrawableResId(R.drawable.ic_delete_white_24dp);
-        return configuration;
+        return new SwipeConfiguration.Builder()          
+            .setBackgroundColor(mContext.getResources().getColor(R.color.color_delete))
+            .setDescription(mContext.getResources().getString(R.string.action_delete))
+            .setDescriptionTextColor(mContext.getResources().getColor(android.R.color.white))
+            .setDrawableResId(R.drawable.ic_delete_white_24dp)
+            .build();
     }
 ```
 * `onSwipe(int position)`: This gets called whenever an item is removed using a swipe. You have to call `notifyItemRemoved(position)` there after changing you data.
