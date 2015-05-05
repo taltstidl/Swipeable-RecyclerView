@@ -45,7 +45,7 @@ There are some new methods related to the swiping pattern in the `SwipeAdapter` 
             .setBackgroundColor(mContext.getResources().getColor(R.color.color_delete))
             .setDescription(mContext.getResources().getString(R.string.action_delete))
             .setDescriptionTextColor(mContext.getResources().getColor(android.R.color.white))
-            .setDrawableResId(R.drawable.ic_delete_white_24dp);
+            .setDrawableResId(R.drawable.ic_delete_white_24dp)
             .build();
     }
 ```
