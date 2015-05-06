@@ -73,8 +73,8 @@ You can easily customize the actions when swiping by using the `SwipeConfigurati
 * `setUndoDescription(CharSequence description)`: The text shown when the user has dismissed the item and is shown the option to undo the dismissal.
 * `setUndoable(boolean undoable)`: Whether the action is undoable. If set to `true` the user will have the option to undo the action for 5 seconds, if set to `false` the item will be dismissed immediately.
 * `setSwipeBehaviour(SwipeBehaviour behaviour)`: The behaviour of the item when swiping. Takes one of the provided default behaviours `NORMAL_SWIPE` or `RESTRICTED_SWIPE`.
-* `setSwipeBehaviour(float range, Interpolator interpolator)`: The more customized behaviour of the item when swiping, where `range` indicates how far the item can be swiped (percentage of item width) and `interpolator` is the custom Interpolator used when calculating the item position while swiping.
-* `setCallbackEnabled(boolean enabled)`: Whether the swipe callback should be triggered on this action. If set to `true` you will receive a swipe action through `onSwipe(int pos, int dir)`, if set to `false` you won't.
+* `setSwipeBehaviour(float swipeRange, Interpolator swipeInterpolator)`: The more customized behaviour of the item when swiping, where `swipeRange` indicates how far the item can be swiped (percentage of item width) and `swipeInterpolator` is the custom Interpolator used when calculating the item position while swiping.
+* `setCallbackEnabled(callbackEnabled)`: Whether the swipe callback should be triggered on this action. If set to `true` you will receive a swipe action through `onSwipe(int position, int direction)`, if set to `false` you won't.
 
 ## License
 
