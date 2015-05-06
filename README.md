@@ -6,7 +6,15 @@ A library that provides an easy and customizable way to implement a swipe to dis
 ## Usage
 ### Importing the library
 
-This library will make it to maven eventually, but since it currently is in active development you'll have to build it yourself by cloning or downloading this repo.
+This library is available as a gradle dependency via [JitPack.io](https://github.com/jitpack/jitpack.io). Just add the following lines to your app module `build.gradle`:
+``` gradle
+repositories { 
+    maven { url "https://jitpack.io" }
+}
+dependencies {
+    compile 'com.github.TR4Android:Swipeable-RecyclerView:0.1.0'
+}
+```
 
 ### Code Setup
 
@@ -46,8 +54,8 @@ An implementation might look like this:
 public class SampleAdapter extends SwipeAdapter {
     ...
     @Override
-    public SwipeConfiguration onCreateSwipeConfiguration(int position) {
-        return new SwipeConfiguration.Builder()          
+    public SwipeConfiguration onCreateSwipeConfiguration(Context context, int position) {
+        return new SwipeConfiguration.Builder(context)          
             .setBackgroundColor(mContext.getResources().getColor(R.color.color_delete))
             .setDrawableResId(R.drawable.ic_delete_white_24dp)
             .build();
@@ -67,14 +75,18 @@ public class SampleAdapter extends SwipeAdapter {
 You can easily customize the actions when swiping by using the `SwipeConfiguration` class which gives you full control over various aspects of this library. The following is a list of all currently available options. For all those there is also a corresponding `setLeft...()` and `setRight...()` flavor.
 
 * `setBackgroundColor(int resolvedColor)`: The background color that appears behind the list item.
+* `setBackgroundColorId(int resId)`: The resource id of the background color that appears behind the list item.
 * `setDrawableResId(int resId)`: The resource id of the drawable shown as a hint for the action.
 * `setDescriptionTextColor(int resolvedColor)`: The text color used for the description and undo text.
+* `setDescriptionTextColorId(int resId)`: The resource id of the text color used for the description and undo text.
 * `setDescription(CharSequence description)`: The text shown as a hint for the action.
+* `setDescriptionId(int resId)`: The resource id of the text shown as a hint for the action.
 * `setUndoDescription(CharSequence description)`: The text shown when the user has dismissed the item and is shown the option to undo the dismissal.
+* `setUndoDescriptionId(int resId)`: The resource id of the text shown when the user has dismissed the item and is shown the option to undo the dismissal.
 * `setUndoable(boolean undoable)`: Whether the action is undoable. If set to `true` the user will have the option to undo the action for 5 seconds, if set to `false` the item will be dismissed immediately.
 * `setSwipeBehaviour(SwipeBehavior swipeBehavior)`: The behaviour of the item when swiping. Takes one of the provided default behaviours `NORMAL_SWIPE` or `RESTRICTED_SWIPE`.
 * `setSwipeBehaviour(float swipeRange, Interpolator swipeInterpolator)`: The more customized behaviour of the item when swiping, where `swipeRange` indicates how far the item can be swiped (percentage of item width) and `swipeInterpolator` is the custom Interpolator used when calculating the item position while swiping.
-* `setCallbackEnabled(callbackEnabled)`: Whether the swipe callback should be triggered on this action. If set to `true` you will receive a swipe action through `onSwipe(int position, int direction)`, if set to `false` you won't.
+* `setCallbackEnabled(boolean callbackEnabled)`: Whether the swipe callback should be triggered on this action. If set to `true` you will receive a swipe action through `onSwipe(int position, int direction)`, if set to `false` you won't.
 
 ## License
 
