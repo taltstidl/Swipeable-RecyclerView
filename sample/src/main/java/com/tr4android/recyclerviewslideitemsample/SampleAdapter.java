@@ -63,10 +63,12 @@ public class SampleAdapter extends SwipeAdapter {
     @Override
     public SwipeConfiguration onCreateSwipeConfiguration(Context context, int position) {
         return new SwipeConfiguration.Builder(context)
-                .setBackgroundColorId(R.color.color_delete)
+                .setLeftBackgroundColorId(R.color.color_delete)
+                .setRightBackgroundColorId(R.color.color_mark)
                 .setDrawableResId(R.drawable.ic_delete_white_24dp)
-                .setUndoable(true)
-                .setUndoDescription(R.string.action_deleted)
+                .setRightDrawableResId(R.drawable.ic_done_white_24dp)
+                .setLeftUndoable(true)
+                .setLeftUndoDescription(R.string.action_deleted)
                 .setDescriptionTextColorId(android.R.color.white)
                 .setLeftSwipeBehaviour(SwipeConfiguration.SwipeBehaviour.NORMAL_SWIPE)
                 .setRightSwipeBehaviour(SwipeConfiguration.SwipeBehaviour.RESTRICTED_SWIPE)
@@ -75,8 +77,10 @@ public class SampleAdapter extends SwipeAdapter {
 
     @Override
     public void onSwipe(int position, int direction) {
-        mDataset.remove(position);
-        notifyItemRemoved(position);
+        if (direction == SWIPE_LEFT) {
+            mDataset.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     @Override

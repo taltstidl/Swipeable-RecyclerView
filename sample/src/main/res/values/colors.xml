@@ -6,6 +6,7 @@
     <color name="color_accent">#f44336</color>
 
     <color name="color_delete">#ff5722</color>
+    <color name="color_mark">#4caf50</color>
 
     <!-- Randomized colors -->
     <color name="color_red">#f44336</color>

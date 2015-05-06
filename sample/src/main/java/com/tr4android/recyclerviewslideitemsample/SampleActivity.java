@@ -1,6 +1,10 @@
 package com.tr4android.recyclerviewslideitemsample;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +41,22 @@ public class SampleActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            // show info dialog
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.dialog_title)
+                    .setMessage(R.string.dialog_message)
+                    .setNeutralButton(R.string.dialog_neutral_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String url = "https://github.com/TR4Android/Swipeable-RecyclerView";
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+                        }
+                    })
+                    .setNegativeButton(R.string.dialog_negative_button, null)
+                    .show();
             return true;
         }
 
