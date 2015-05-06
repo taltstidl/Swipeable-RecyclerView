@@ -1,7 +1,6 @@
 package com.tr4android.recyclerviewslideitemsample;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,7 @@ import com.tr4android.recyclerviewslideitem.SwipeConfiguration;
 import java.util.ArrayList;
 
 /**
- * Created by ThomasR on 28.04.2015.
+ * Copyright (c) 2015 TR4Android
  */
 public class SampleAdapter extends SwipeAdapter {
     ArrayList<String> mDataset;

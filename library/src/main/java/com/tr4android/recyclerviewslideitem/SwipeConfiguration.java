@@ -1,5 +1,9 @@
 package com.tr4android.recyclerviewslideitem;
 
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
+
 /**
  * Copyright (c) 2015 TR4Android
  */
@@ -21,10 +25,10 @@ public class SwipeConfiguration {
     private int mLeftBackgroundColor;
     // right background color
     private int mRightBackgroundColor;
-    // whether or not dismissing is allowed when swiping from left
-    private boolean mLeftDismissable = true;
-    // whether or not dismissing is allowed when swiping from right
-    private boolean mRightDismissable = true;
+    // whether callback is enabled when swiping from left
+    private boolean mLeftCallbackEnabled = true;
+    // whether callback is enabled when swiping from right
+    private boolean mRightCallbackEnabled = true;
     // whether action after swiping from left is undoable
     private boolean mLeftUndoable;
     // whether action after swiping from right is undoable
@@ -33,7 +37,18 @@ public class SwipeConfiguration {
     private CharSequence mLeftUndoDescription;
     // right undo description text
     private CharSequence mRightUndoDescription;
-
+    // left undo button text
+    private CharSequence mLeftUndoButtonText;
+    // right undo button text
+    private CharSequence mRightUndoButtonText;
+    // right swipe range (value between 0 and 1.0)
+    private float mLeftSwipeRange;
+    // right swipe range (value between 0 and 1.0)
+    private float mRightSwipeRange;
+    // right interpolator used for swipe animation
+    private Interpolator mLeftSwipeInterpolator;
+    // right interpolator used for swipe animation
+    private Interpolator mRightSwipeInterpolator;
 
     int getLeftDrawableResId() {
         return mLeftDrawableResId;
@@ -99,20 +114,20 @@ public class SwipeConfiguration {
         mRightBackgroundColor = rightBackgroundColor;
     }
 
-    boolean isLeftDismissable() {
-        return mLeftDismissable;
+    boolean isLeftCallbackEnabled() {
+        return mLeftCallbackEnabled;
     }
 
-    void setLeftDismissable(boolean leftDismissable) {
-        mLeftDismissable = leftDismissable;
+    void setLeftCallbackEnabled(boolean leftCallbackEnabled) {
+        mLeftCallbackEnabled = leftCallbackEnabled;
     }
 
-    boolean isRightDismissable() {
-        return mRightDismissable;
+    boolean isRightCallbackEnabled() {
+        return mRightCallbackEnabled;
     }
 
-    void setRightDismissable(boolean rightDismissable) {
-        mRightDismissable = rightDismissable;
+    void setRightCallbackEnabled(boolean rightCallbackEnabled) {
+        mRightCallbackEnabled = rightCallbackEnabled;
     }
 
     boolean isLeftUndoable() {
@@ -131,20 +146,83 @@ public class SwipeConfiguration {
         mRightUndoable = rightUndoable;
     }
 
-    public CharSequence getLeftUndoDescription() {
+    CharSequence getLeftUndoDescription() {
         return mLeftUndoDescription;
     }
 
-    public void setLeftUndoDescription(CharSequence leftUndoDescription) {
+    void setLeftUndoDescription(CharSequence leftUndoDescription) {
         mLeftUndoDescription = leftUndoDescription;
     }
 
-    public CharSequence getRightUndoDescription() {
+    CharSequence getRightUndoDescription() {
         return mRightUndoDescription;
     }
 
-    public void setRightUndoDescription(CharSequence rightUndoDescription) {
+    void setRightUndoDescription(CharSequence rightUndoDescription) {
         mRightUndoDescription = rightUndoDescription;
+    }
+
+    CharSequence getLeftUndoButtonText() {
+        return mLeftUndoButtonText;
+    }
+
+    void setLeftUndoButtonText(CharSequence leftUndoButtonText) {
+        mLeftUndoButtonText = leftUndoButtonText;
+    }
+
+    CharSequence getRightUndoButtonText() {
+        return mRightUndoButtonText;
+    }
+
+    void setRightUndoButtonText(CharSequence rightUndoButtonText) {
+        mRightUndoButtonText = rightUndoButtonText;
+    }
+
+    float getLeftSwipeRange() {
+        return mLeftSwipeRange;
+    }
+
+    Interpolator getLeftSwipeInterpolator() {
+        return mLeftSwipeInterpolator;
+    }
+
+    void setLeftSwipeBehaviour(float leftSwipeRange, Interpolator leftSwipeInterpolator) {
+        mLeftSwipeRange = leftSwipeRange;
+        mLeftSwipeInterpolator = leftSwipeInterpolator;
+    }
+
+    float getRightSwipeRange() {
+        return mRightSwipeRange;
+    }
+
+    Interpolator getRightSwipeInterpolator() {
+        return mRightSwipeInterpolator;
+    }
+
+    void setRightSwipeBehavior(float rightSwipeRange, Interpolator rightSwipeInterpolator) {
+        mRightSwipeRange = rightSwipeRange;
+        mRightSwipeInterpolator = rightSwipeInterpolator;
+    }
+
+    /**
+     * Class for default swipe behaviour provided by the library
+     */
+    public static class SwipeBehavior {
+        // default interpolators
+        private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
+        private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
+
+        // default SwipeBehaviour values
+        public static final SwipeBehavior NORMAL_SWIPE = new SwipeBehavior(1.0f, LINEAR_INTERPOLATOR);
+        public static final SwipeBehavior RESTRICTED_SWIPE = new SwipeBehavior(0.25f, DECELERATE_INTERPOLATOR);
+
+        public float range;
+        public Interpolator interpolator;
+
+        SwipeBehavior(float range, Interpolator interpolator) {
+            this.range = range;
+            this.interpolator = interpolator;
+        }
     }
 
     /**
@@ -159,12 +237,18 @@ public class SwipeConfiguration {
         private int mRightDescriptionTextColor;
         private int mLeftBackgroundColor;
         private int mRightBackgroundColor;
-        private boolean mLeftDismissable = true;
-        private boolean mRightDismissable = true;
+        private boolean mLeftCallbackEnabled = true;
+        private boolean mRightCallbackEnabled = true;
         private boolean mLeftUndoable;
         private boolean mRightUndoable;
         private CharSequence mLeftUndoDescription;
         private CharSequence mRightUndoDescription;
+        private CharSequence mLeftUndoButtonText;
+        private CharSequence mRightUndoButtonText;
+        private float mLeftSwipeRange;
+        private float mRightSwipeRange;
+        private Interpolator mLeftSwipeInterpolator;
+        private Interpolator mRightSwipeInterpolator;
 
         public Builder setLeftDrawableResId(int leftDrawableResId) {
             mLeftDrawableResId = leftDrawableResId;
@@ -230,19 +314,19 @@ public class SwipeConfiguration {
             return this;
         }
 
-        public Builder setLeftDismissable(boolean leftDismissable) {
-            mLeftDismissable = leftDismissable;
+        public Builder setLeftCallbackEnabled(boolean leftCallbackEnabled) {
+            mLeftCallbackEnabled = leftCallbackEnabled;
             return this;
         }
 
-        public Builder setRightDismissable(boolean rightDismissable) {
-            mRightDismissable = rightDismissable;
+        public Builder setRightCallbackEnabled(boolean rightCallbackEnabled) {
+            mRightCallbackEnabled = rightCallbackEnabled;
             return this;
         }
 
-        public Builder setDismissable(boolean dismissable) {
-            mLeftDismissable = dismissable;
-            mRightDismissable = dismissable;
+        public Builder setCallbackEnabled(boolean callbackEnabled) {
+            mLeftCallbackEnabled = callbackEnabled;
+            mRightCallbackEnabled = callbackEnabled;
             return this;
         }
 
@@ -272,9 +356,60 @@ public class SwipeConfiguration {
             return this;
         }
 
+        public Builder setLeftUndoButtonText(CharSequence leftUndoButtonText) {
+            mLeftUndoButtonText = leftUndoButtonText;
+            return this;
+        }
+
+        public Builder setRightUndoButtonText(CharSequence rightUndoButtonText) {
+            mRightUndoButtonText = rightUndoButtonText;
+            return this;
+        }
+
         public Builder setUndoDescription(CharSequence undoDescription) {
             mLeftUndoDescription = undoDescription;
             mRightUndoDescription = undoDescription;
+            return this;
+        }
+
+        public Builder setLeftSwipeBehaviour(float leftSwipeRange, Interpolator leftSwipeInterpolator) {
+            mLeftSwipeRange = leftSwipeRange;
+            mLeftSwipeInterpolator = leftSwipeInterpolator;
+            return this;
+        }
+
+        public Builder setLeftSwipeBehaviour(SwipeBehavior leftSwipeBehaviour) {
+            mLeftSwipeRange = leftSwipeBehaviour.range;
+            mLeftSwipeInterpolator = leftSwipeBehaviour.interpolator;
+            return this;
+        }
+
+        public Builder setRightSwipeBehavior(float rightSwipeRange, Interpolator rightSwipeInterpolator) {
+            mRightSwipeRange = rightSwipeRange;
+            mRightSwipeInterpolator = rightSwipeInterpolator;
+            return this;
+        }
+
+        public Builder setRightSwipeBehavior(SwipeBehavior rightSwipeBehavior) {
+            mRightSwipeRange = rightSwipeBehavior.range;
+            mRightSwipeInterpolator = rightSwipeBehavior.interpolator;
+            return this;
+        }
+
+
+        public Builder setSwipeBehavior(float swipeRange, Interpolator swipeInterpolator) {
+            mLeftSwipeRange = swipeRange;
+            mLeftSwipeInterpolator = swipeInterpolator;
+            mRightSwipeRange = swipeRange;
+            mRightSwipeInterpolator = swipeInterpolator;
+            return this;
+        }
+
+        public Builder setSwipeBehavior(SwipeBehavior swipeBehavior) {
+            mLeftSwipeRange = swipeBehavior.range;
+            mLeftSwipeInterpolator = swipeBehavior.interpolator;
+            mRightSwipeRange = swipeBehavior.range;
+            mRightSwipeInterpolator = swipeBehavior.interpolator;
             return this;
         }
 
@@ -288,12 +423,16 @@ public class SwipeConfiguration {
             config.setRightDescriptionTextColor(mRightDescriptionTextColor);
             config.setLeftBackgroundColor(mLeftBackgroundColor);
             config.setRightBackgroundColor(mRightBackgroundColor);
-            config.setLeftDismissable(mLeftDismissable);
-            config.setRightDismissable(mRightDismissable);
+            config.setLeftCallbackEnabled(mLeftCallbackEnabled);
+            config.setRightCallbackEnabled(mRightCallbackEnabled);
             config.setLeftUndoable(mLeftUndoable);
             config.setRightUndoable(mRightUndoable);
             config.setLeftUndoDescription(mLeftUndoDescription);
             config.setRightUndoDescription(mRightUndoDescription);
+            config.setLeftUndoButtonText(mLeftUndoButtonText);
+            config.setRightUndoButtonText(mRightUndoButtonText);
+            config.setLeftSwipeBehaviour(mLeftSwipeRange, mLeftSwipeInterpolator);
+            config.setRightSwipeBehavior(mRightSwipeRange, mRightSwipeInterpolator);
             return config;
         }
     }
