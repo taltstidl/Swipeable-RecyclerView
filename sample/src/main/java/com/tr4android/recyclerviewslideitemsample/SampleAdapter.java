@@ -66,10 +66,10 @@ public class SampleAdapter extends SwipeAdapter {
                 .setBackgroundColorId(R.color.color_delete)
                 .setDrawableResId(R.drawable.ic_delete_white_24dp)
                 .setUndoable(true)
-                .setUndoDescription(mContext.getResources().getString(R.string.action_deleted))
+                .setUndoDescription(R.string.action_deleted)
                 .setDescriptionTextColorId(android.R.color.white)
-                .setLeftSwipeBehaviour(SwipeConfiguration.SwipeBehavior.NORMAL_SWIPE)
-                .setRightSwipeBehavior(SwipeConfiguration.SwipeBehavior.RESTRICTED_SWIPE)
+                .setLeftSwipeBehaviour(SwipeConfiguration.SwipeBehaviour.NORMAL_SWIPE)
+                .setRightSwipeBehaviour(SwipeConfiguration.SwipeBehaviour.RESTRICTED_SWIPE)
                 .build();
     }
 
