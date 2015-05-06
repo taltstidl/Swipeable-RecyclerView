@@ -73,7 +73,7 @@ public class SampleAdapter extends SwipeAdapter {
     }
 
     @Override
-    public void onSwipe(int position) {
+    public void onSwipe(int position, int direction) {
         mDataset.remove(position);
         notifyItemRemoved(position);
     }

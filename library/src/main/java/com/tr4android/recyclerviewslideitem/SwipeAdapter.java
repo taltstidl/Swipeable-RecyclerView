@@ -1,15 +1,15 @@
 package com.tr4android.recyclerviewslideitem;
 
-import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 /**
- * Created by ThomasR on 03.05.2015.
+ * Copyright (c) 2015 TR4Android
  */
 public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public static final int SWIPE_LEFT = -1;
+    public static final int SWIPE_RIGHT = 1;
 
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -28,12 +28,12 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         swipeItem.setSwipeListener(new SwipeItem.SwipeListener() {
             @Override
             public void onSwipeLeft() {
-                onSwipe(swipeHolder.getPosition());
+                onSwipe(swipeHolder.getPosition(), SWIPE_LEFT);
             }
 
             @Override
             public void onSwipeRight() {
-                onSwipe(swipeHolder.getPosition());
+                onSwipe(swipeHolder.getPosition(), SWIPE_RIGHT);
             }
         });
         onBindSwipeViewHolder(holder, position);
@@ -48,5 +48,5 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public abstract SwipeConfiguration onCreateSwipeConfiguration(int position);
 
-    public abstract void onSwipe(int position);
+    public abstract void onSwipe(int position, int direction);
 }
