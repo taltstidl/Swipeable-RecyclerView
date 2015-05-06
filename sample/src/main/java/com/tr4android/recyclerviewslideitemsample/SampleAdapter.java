@@ -1,6 +1,7 @@
 package com.tr4android.recyclerviewslideitemsample;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v7.widget.RecyclerView;

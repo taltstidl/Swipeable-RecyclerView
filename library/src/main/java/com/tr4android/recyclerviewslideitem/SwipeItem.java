@@ -34,6 +34,8 @@ public class SwipeItem extends ViewGroup {
 
     private boolean mFirstLayout = true;
 
+    private int mPreviousPosition = 0;
+
     public SwipeItem(Context context) {
         this(context, null);
     }
@@ -84,18 +86,17 @@ public class SwipeItem extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        final int parentLeft = getPaddingLeft();
+        final int parentRight = right - left - getPaddingRight();
+        final int parentTop = getPaddingTop();
+
         if (mFirstLayout) {
-            final int parentLeft = getPaddingLeft();
-            final int parentRight = right - left - getPaddingRight();
-
-            final int parentTop = getPaddingTop();
-
             mHorizontalDragRange = getMeasuredWidth();
-
-            mSwipeInfo.layout(parentLeft, parentTop, parentRight, parentTop + mSwipeItem.getMeasuredHeight());
             mSwipeItem.layout(parentLeft, parentTop, parentRight, parentTop + mSwipeItem.getMeasuredHeight());
             mFirstLayout = false;
         }
+
+        mSwipeInfo.layout(parentLeft, parentTop, parentRight, parentTop + mSwipeItem.getMeasuredHeight());
     }
 
     @Override
@@ -120,8 +121,13 @@ public class SwipeItem extends ViewGroup {
         mSwipeInfo.setBackgroundColor(resolvedColor);
     }
 
-    public void setSwipeImageResource(int resId) {
+    public void setSwipeLeftImageResource(int resId) {
         ((ImageView) mSwipeInfo.findViewById(R.id.imageViewLeft)).setImageResource(resId);
+        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewRight)).setImageResource(0);
+    }
+
+    public void setSwipeRightImageResource(int resId) {
+        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewLeft)).setImageResource(0);
         ((ImageView) mSwipeInfo.findViewById(R.id.imageViewRight)).setImageResource(resId);
     }
 
@@ -225,19 +231,20 @@ public class SwipeItem extends ViewGroup {
     }
     
     private void handlePositionChange(int newLeft) {
-        if (newLeft < 0) {
+        if (newLeft < 0 && mPreviousPosition >= 0) {
             // show right action
             setSwipeBackgroundColor(mConfiguration.getRightBackgroundColor());
-            setSwipeImageResource(mConfiguration.getRightDrawableResId());
+            setSwipeRightImageResource(mConfiguration.getRightDrawableResId());
             setSwipeDescription(mConfiguration.getRightDescription());
             setSwipeDescriptionTextColor(mConfiguration.getRightDescriptionTextColor());
-        } else {
+        } else if (newLeft > 0 && mPreviousPosition <= 0) {
             // show left action
             setSwipeBackgroundColor(mConfiguration.getLeftBackgroundColor());
-            setSwipeImageResource(mConfiguration.getLeftDrawableResId());
+            setSwipeLeftImageResource(mConfiguration.getLeftDrawableResId());
             setSwipeDescription(mConfiguration.getLeftDescription());
             setSwipeDescriptionTextColor(mConfiguration.getLeftDescriptionTextColor());
         }
+        mPreviousPosition = newLeft;
     }
 
     private void handleLeftSwipe() {
@@ -267,8 +274,8 @@ public class SwipeItem extends ViewGroup {
     }
 
     private void handleRightSwipe() {
-        setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
         if (mConfiguration.isRightUndoable()) {
+            setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
             final Handler handler = new Handler();
             final Runnable removeItemRunnable = new Runnable() {
                 @Override

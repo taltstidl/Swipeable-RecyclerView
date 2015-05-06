@@ -39,6 +39,7 @@
         android:visibility="invisible">
 
         <TextView
+            android:text=""
             android:textSize="16sp"
             android:id="@+id/undoDescription"
             android:layout_width="wrap_content"
@@ -54,8 +55,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:gravity="center_vertical"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             android:text="@string/action_undo" />
     </FrameLayout>
 </FrameLayout>
