@@ -1,5 +1,9 @@
 package com.tr4android.recyclerviewslideitem;
 
+import android.content.Context;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
@@ -229,6 +233,7 @@ public class SwipeConfiguration {
      * Builder class for building SwipeConfiguration
      */
     public static class Builder {
+        private Context mContext;
         private int mLeftDrawableResId = 0;
         private int mRightDrawableResId = 0;
         private CharSequence mLeftDescription;
@@ -250,17 +255,21 @@ public class SwipeConfiguration {
         private Interpolator mLeftSwipeInterpolator;
         private Interpolator mRightSwipeInterpolator;
 
-        public Builder setLeftDrawableResId(int leftDrawableResId) {
+        public Builder(Context context) {
+            mContext = context;
+        }
+
+        public Builder setLeftDrawableResId(@DrawableRes int leftDrawableResId) {
             mLeftDrawableResId = leftDrawableResId;
             return this;
         }
 
-        public Builder setRightDrawableResId(int rightDrawableResId) {
+        public Builder setRightDrawableResId(@DrawableRes int rightDrawableResId) {
             mRightDrawableResId = rightDrawableResId;
             return this;
         }
 
-        public Builder setDrawableResId(int drawableResId) {
+        public Builder setDrawableResId(@DrawableRes int drawableResId) {
             mLeftDrawableResId = drawableResId;
             mRightDrawableResId = drawableResId;
             return this;
@@ -271,8 +280,18 @@ public class SwipeConfiguration {
             return this;
         }
 
+        public Builder setLeftDescription(@StringRes int resid) {
+            mLeftDescription = mContext.getString(resid);
+            return this;
+        }
+
         public Builder setRightDescription(CharSequence rightDescription) {
             mRightDescription = rightDescription;
+            return this;
+        }
+
+        public Builder setRightDescription(@StringRes int resid) {
+            mRightDescription = mContext.getString(resid);
             return this;
         }
 
@@ -282,13 +301,29 @@ public class SwipeConfiguration {
             return this;
         }
 
+        public Builder setDescription(@StringRes int resid) {
+            mLeftDescription = mContext.getString(resid);
+            mRightDescription = mContext.getString(resid);
+            return this;
+        }
+
         public Builder setLeftDescriptionTextColor(int leftDescriptionTextColor) {
             mLeftDescriptionTextColor = leftDescriptionTextColor;
             return this;
         }
 
+        public Builder setLeftDescriptionTextColorResId(@ColorRes int resId) {
+            mLeftDescriptionTextColor = mContext.getResources().getColor(resId);
+            return this;
+        }
+
         public Builder setRightDescriptionTextColor(int rightDescriptionTextColor) {
             mRightDescriptionTextColor = rightDescriptionTextColor;
+            return this;
+        }
+
+        public Builder setRightDescriptionTextColorId(@ColorRes int resId) {
+            mRightDescriptionTextColor = mContext.getResources().getColor(resId);
             return this;
         }
 
@@ -298,8 +333,19 @@ public class SwipeConfiguration {
             return this;
         }
 
+        public Builder setDescriptionTextColorId(@ColorRes int resId) {
+            mLeftDescriptionTextColor = mContext.getResources().getColor(resId);
+            mRightDescriptionTextColor = mContext.getResources().getColor(resId);
+            return this;
+        }
+
         public Builder setLeftBackgroundColor(int leftBackgroundColor) {
             mLeftBackgroundColor = leftBackgroundColor;
+            return this;
+        }
+
+        public Builder setLeftBackgroundColorId(@ColorRes int resId) {
+            mLeftBackgroundColor = mContext.getResources().getColor(resId);
             return this;
         }
 
@@ -308,9 +354,20 @@ public class SwipeConfiguration {
             return this;
         }
 
+        public Builder setRightBackgroundColorId(@ColorRes int resId) {
+            mRightBackgroundColor = mContext.getResources().getColor(resId);
+            return this;
+        }
+
         public Builder setBackgroundColor(int backgroundColor) {
             mLeftBackgroundColor = backgroundColor;
             mRightBackgroundColor = backgroundColor;
+            return this;
+        }
+
+        public Builder setBackgroundColorId(@ColorRes int resId) {
+            mLeftBackgroundColor = mContext.getResources().getColor(resId);
+            mRightBackgroundColor = mContext.getResources().getColor(resId);
             return this;
         }
 
@@ -351,8 +408,30 @@ public class SwipeConfiguration {
             return this;
         }
 
+        public Builder setLeftUndoDescription(@StringRes int resid) {
+            mLeftUndoDescription = mContext.getString(resid);
+            return this;
+        }
+
         public Builder setRightUndoDescription(CharSequence rightUndoDescription) {
             mRightUndoDescription = rightUndoDescription;
+            return this;
+        }
+
+        public Builder setRightUndoDescription(@StringRes int resid) {
+            mRightUndoDescription = mContext.getString(resid);
+            return this;
+        }
+
+        public Builder setUndoDescription(CharSequence undoDescription) {
+            mLeftUndoDescription = undoDescription;
+            mRightUndoDescription = undoDescription;
+            return this;
+        }
+
+        public Builder setUndoDescription(@StringRes int resid) {
+            mLeftUndoDescription = mContext.getString(resid);
+            mRightUndoDescription = mContext.getString(resid);
             return this;
         }
 
@@ -361,14 +440,30 @@ public class SwipeConfiguration {
             return this;
         }
 
+        public Builder setLeftUndoButtonText(@StringRes int resid) {
+            mLeftUndoButtonText = mContext.getString(resid);
+            return this;
+        }
+
         public Builder setRightUndoButtonText(CharSequence rightUndoButtonText) {
             mRightUndoButtonText = rightUndoButtonText;
             return this;
         }
 
-        public Builder setUndoDescription(CharSequence undoDescription) {
-            mLeftUndoDescription = undoDescription;
-            mRightUndoDescription = undoDescription;
+        public Builder setRightUndoButtonText(@StringRes int resid) {
+            mRightUndoButtonText = mContext.getString(resid);
+            return this;
+        }
+
+        public Builder setUndoButtonText(CharSequence undoButtonText) {
+            mLeftUndoButtonText = undoButtonText;
+            mRightUndoButtonText = undoButtonText;
+            return this;
+        }
+
+        public Builder setUndoButtonText(@StringRes int resid) {
+            mLeftUndoButtonText = mContext.getString(resid);
+            mRightUndoButtonText = mContext.getString(resid);
             return this;
         }
 
@@ -395,7 +490,6 @@ public class SwipeConfiguration {
             mRightSwipeInterpolator = rightSwipeBehavior.interpolator;
             return this;
         }
-
 
         public Builder setSwipeBehavior(float swipeRange, Interpolator swipeInterpolator) {
             mLeftSwipeRange = swipeRange;
@@ -437,4 +531,3 @@ public class SwipeConfiguration {
         }
     }
 }
-

@@ -61,13 +61,13 @@ public class SampleAdapter extends SwipeAdapter {
     }
 
     @Override
-    public SwipeConfiguration onCreateSwipeConfiguration(int position) {
-        return new SwipeConfiguration.Builder()
-                .setBackgroundColor(mContext.getResources().getColor(R.color.color_delete))
+    public SwipeConfiguration onCreateSwipeConfiguration(Context context, int position) {
+        return new SwipeConfiguration.Builder(context)
+                .setBackgroundColorId(R.color.color_delete)
                 .setDrawableResId(R.drawable.ic_delete_white_24dp)
                 .setUndoable(true)
                 .setUndoDescription(mContext.getResources().getString(R.string.action_deleted))
-                .setDescriptionTextColor(mContext.getResources().getColor(android.R.color.white))
+                .setDescriptionTextColorId(android.R.color.white)
                 .build();
     }
 

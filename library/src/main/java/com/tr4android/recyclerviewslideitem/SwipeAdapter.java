@@ -1,5 +1,6 @@
 package com.tr4android.recyclerviewslideitem;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public final void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final RecyclerView.ViewHolder swipeHolder = holder;
         final SwipeItem swipeItem = (SwipeItem) swipeHolder.itemView;
-        SwipeConfiguration configuration = onCreateSwipeConfiguration(position);
+        SwipeConfiguration configuration = onCreateSwipeConfiguration(swipeItem.getContext(), position);
         swipeItem.setSwipeConfiguration(configuration);
         swipeItem.setSwipeListener(new SwipeItem.SwipeListener() {
             @Override
@@ -46,7 +47,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public abstract int getItemCount();
 
-    public abstract SwipeConfiguration onCreateSwipeConfiguration(int position);
+    public abstract SwipeConfiguration onCreateSwipeConfiguration(Context context, int position);
 
     public abstract void onSwipe(int position, int direction);
 }
