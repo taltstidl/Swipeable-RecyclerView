@@ -14,11 +14,6 @@
           </set>
         </option>
       </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="distributionType" value="LOCAL" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/library" />
-        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/plugins/gradle" />
-      </GradleProjectSettings>
     </option>
   </component>
 </project>
