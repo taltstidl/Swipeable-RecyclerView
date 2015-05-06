@@ -1,7 +1,7 @@
 # Swipeable-RecyclerView
 A library that provides an easy and customizable way to implement a swipe to dismiss pattern with RecyclerView.
 
-**Note:** This library is currently in its infancy and thus shouldn't be used in production versions as of yet. If you are comfortable experimenting with this library though feel free to give it a spin and report any issues you find. A list of issues currently on the roadmap can be found [here](https://github.com/TR4Android/Swipeable-RecyclerView/issues).
+**Note:** This library is currently in active development and might thus not be suitable for production versions as of yet. If you are comfortable experimenting with this library though feel free to give it a spin and report any issues you find. A list of issues currently on the roadmap can be found [here](https://github.com/TR4Android/Swipeable-RecyclerView/issues).
 
 ## Usage
 ### Importing the library
@@ -46,7 +46,7 @@ public class SampleAdapter extends SwipeAdapter {
 ##### Special setup for swipeable adapter
 There are some new methods related to the swiping pattern in the `SwipeAdapter` that you'll have to override. Those are:
 
-* `onCreateSwipeConfiguration(int position)`: This is used to determine the configuration of a particular list item and allows flexible control on a per item basis. You'll have to return a `SwipeConfiguration` using the built in `Builder` class. More customization options can be found in the SwipeConfiguration section below.
+* `onCreateSwipeConfiguration(Context context, int position)`: This is used to determine the configuration of a particular list item and allows flexible control on a per item basis. You'll have to return a `SwipeConfiguration` using the built in `Builder` class. More customization options can be found in the SwipeConfiguration section below.
 * `onSwipe(int position, int direction)`: This gets called whenever an item is removed using a swipe. Be sure to call `notifyItemRemoved(position)` there after changing your data to properly allow removal using the default ItemAnimator of the RecyclerView. `int direction` is one of either `SWIPE_LEFT` or `SWIPE_RIGHT` indicating the direction in which the user has dismissed the item.
 
 An implementation might look like this:
