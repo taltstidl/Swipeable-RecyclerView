@@ -36,6 +36,10 @@ public class SwipeItem extends ViewGroup {
 
     private int mPreviousPosition = 0;
 
+    private boolean mHasPassedLeftThreshold;
+
+    private boolean mHasPassedRightThreshold;
+
     public SwipeItem(Context context) {
         this(context, null);
     }
@@ -122,13 +126,13 @@ public class SwipeItem extends ViewGroup {
     }
 
     public void setSwipeLeftImageResource(int resId) {
-        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewLeft)).setImageResource(resId);
-        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewRight)).setImageResource(0);
+        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewLeft)).setImageResource(0);
+        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewRight)).setImageResource(resId);
     }
 
     public void setSwipeRightImageResource(int resId) {
-        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewLeft)).setImageResource(0);
-        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewRight)).setImageResource(resId);
+        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewLeft)).setImageResource(resId);
+        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewRight)).setImageResource(0);
     }
 
     public void setSwipeDescription(CharSequence description) {
@@ -168,13 +172,13 @@ public class SwipeItem extends ViewGroup {
     }
 
     void dispatchOnSwipeLeft() {
-        if (mSwipeListener != null) {
+        if (mSwipeListener != null && mConfiguration.isLeftCallbackEnabled()) {
             mSwipeListener.onSwipeLeft();
         }
     }
 
     void dispatchOnSwipeRight() {
-        if (mSwipeListener != null) {
+        if (mSwipeListener != null && mConfiguration.isRightCallbackEnabled()) {
             mSwipeListener.onSwipeRight();
         }
     }
@@ -188,7 +192,11 @@ public class SwipeItem extends ViewGroup {
 
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
-            return left;
+            if (left < 0) {
+                return child.getLeft() + Math.round(mConfiguration.getLeftSwipeRange() * dx);
+            } else {
+                return child.getLeft() + Math.round(mConfiguration.getRightSwipeRange() * dx);
+            }
         }
 
         @Override
@@ -203,6 +211,16 @@ public class SwipeItem extends ViewGroup {
                     handleLeftSwipe();
                 } else if (mSwipeItem.getLeft() == mHorizontalDragRange) {
                     handleRightSwipe();
+                } else if (mSwipeItem.getLeft() == 0) {
+                    // check whether settled from restricted swipe
+                    if (mConfiguration.getLeftSwipeRange() != 1.0f && mHasPassedLeftThreshold) {
+                        mHasPassedLeftThreshold = false;
+                        dispatchOnSwipeLeft();
+                    }
+                    if (mConfiguration.getRightSwipeRange() != 1.0f && mHasPassedRightThreshold) {
+                        mHasPassedRightThreshold = false;
+                        dispatchOnSwipeRight();
+                    }
                 }
             }
         }
@@ -215,10 +233,10 @@ public class SwipeItem extends ViewGroup {
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             // logic for slide behaviour
-            if (xvel < 0) {
+            if (xvel < 0 && mConfiguration.getLeftSwipeRange() == 1.0f) {
                 // dismiss to left
                 mDragHelper.settleCapturedViewAt(-mHorizontalDragRange, releasedChild.getTop());
-            } else if (xvel > 0) {
+            } else if (xvel > 0 && mConfiguration.getRightSwipeRange() == 1.0f) {
                 // dismiss to right
                 mDragHelper.settleCapturedViewAt(mHorizontalDragRange, releasedChild.getTop());
             } else {
@@ -231,18 +249,35 @@ public class SwipeItem extends ViewGroup {
     }
     
     private void handlePositionChange(int newLeft) {
-        if (newLeft < 0 && mPreviousPosition >= 0) {
-            // show right action
-            setSwipeBackgroundColor(mConfiguration.getRightBackgroundColor());
-            setSwipeRightImageResource(mConfiguration.getRightDrawableResId());
-            setSwipeDescription(mConfiguration.getRightDescription());
-            setSwipeDescriptionTextColor(mConfiguration.getRightDescriptionTextColor());
-        } else if (newLeft > 0 && mPreviousPosition <= 0) {
-            // show left action
-            setSwipeBackgroundColor(mConfiguration.getLeftBackgroundColor());
-            setSwipeLeftImageResource(mConfiguration.getLeftDrawableResId());
-            setSwipeDescription(mConfiguration.getLeftDescription());
-            setSwipeDescriptionTextColor(mConfiguration.getLeftDescriptionTextColor());
+        Log.i(LOG_TAG, "New left: " + newLeft);
+        if (newLeft > 0) {
+            if (mPreviousPosition <= 0) {
+                // show right action
+                setSwipeBackgroundColor(mConfiguration.getRightBackgroundColor());
+                setSwipeRightImageResource(mConfiguration.getRightDrawableResId());
+                setSwipeDescription(mConfiguration.getRightDescription());
+                setSwipeDescriptionTextColor(mConfiguration.getRightDescriptionTextColor());
+            }
+            float rightRange = mConfiguration.getRightSwipeRange();
+            if (rightRange != 1.0f && newLeft > Math.round(mHorizontalDragRange * rightRange * 0.75f)) {
+                Log.i(LOG_TAG, "Threshold right passed");
+                mHasPassedRightThreshold = true;
+                mHasPassedLeftThreshold = false;
+            }
+        } else if (newLeft < 0) {
+            if (mPreviousPosition >= 0) {
+                // show left action
+                setSwipeBackgroundColor(mConfiguration.getLeftBackgroundColor());
+                setSwipeLeftImageResource(mConfiguration.getLeftDrawableResId());
+                setSwipeDescription(mConfiguration.getLeftDescription());
+                setSwipeDescriptionTextColor(mConfiguration.getLeftDescriptionTextColor());
+            }
+            float leftRange = mConfiguration.getLeftSwipeRange();
+            if (leftRange != 1.0f && newLeft < (- mHorizontalDragRange * leftRange * 0.75f)) {
+                Log.i(LOG_TAG, "Threshold left passed");
+                mHasPassedLeftThreshold = true;
+                mHasPassedRightThreshold = false;
+            }
         }
         mPreviousPosition = newLeft;
     }

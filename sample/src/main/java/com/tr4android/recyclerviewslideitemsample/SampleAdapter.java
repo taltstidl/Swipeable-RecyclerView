@@ -68,6 +68,8 @@ public class SampleAdapter extends SwipeAdapter {
                 .setUndoable(true)
                 .setUndoDescription(mContext.getResources().getString(R.string.action_deleted))
                 .setDescriptionTextColorId(android.R.color.white)
+                .setLeftSwipeBehaviour(SwipeConfiguration.SwipeBehavior.NORMAL_SWIPE)
+                .setRightSwipeBehavior(SwipeConfiguration.SwipeBehavior.RESTRICTED_SWIPE)
                 .build();
     }
 
