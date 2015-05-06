@@ -14,11 +14,12 @@ To be able to use the swipe to dismiss pattern in your RecyclerView you'll have 
 
 ##### Migrating from normal adapter
 Override `onCreateSwipeViewHolder(ViewGroup parent, int viewType)` and `onBindSwipeViewHolder(ViewHolder holder, int position)` instead of the usual `onCreateViewHolder(ViewGroup parent, int viewType)` and `onBindViewHolder(ViewHolder holder, int position)`. This is needed to wrap your list item in a ViewGroup that handles swiping (namely `SwipeItem`) and handle its configuration. In additon to that you'll also have to replace the boolean `attachToRoot` with `true` so your list item gets attached to the wrapping SwipeItem.
+
 A full implementation might look something like this:
 ``` java
 public class SampleAdapter extends SwipeAdapter {
-...
-@Override
+    ...
+    @Override
     public RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_sample, parent, true);
@@ -26,30 +27,51 @@ public class SampleAdapter extends SwipeAdapter {
         return sampleViewHolder;
     }
     
-@Override
+    @Override
     public void onBindSwipeViewHolder(RecyclerView.ViewHolder holder, int position) {
         // handle data
     }
-...
+    ...
 }
 ```
 
 ##### Special setup for swipeable adapter
 There are some new methods related to the swiping pattern in the `SwipeAdapter` that you'll have to override. Those are:
 
-* `onCreateSwipeConfiguration(int position)`: This is used to determine the configuration of a particular list item and allows flexible control on a per item basis. You'll have to return a `SwipeConfiguration`. An implementation might look like this (More customisation options can be found below):
+* `onCreateSwipeConfiguration(int position)`: This is used to determine the configuration of a particular list item and allows flexible control on a per item basis. You'll have to return a `SwipeConfiguration` using the built in `Builder` class. More customization options can be found in the SwipeConfiguration section below.
+* `onSwipe(int position, int direction)`: This gets called whenever an item is removed using a swipe. Be sure to call `notifyItemRemoved(position)` there after changing your data to properly allow removal using the default ItemAnimator of the RecyclerView. `int direction` is one of either `SWIPE_LEFT` or `SWIPE_RIGHT` indicating the direction in which the user has dismissed the item.
+
+An implementation might look like this:
 ``` java
+public class SampleAdapter extends SwipeAdapter {
+    ...
     @Override
     public SwipeConfiguration onCreateSwipeConfiguration(int position) {
         return new SwipeConfiguration.Builder()          
             .setBackgroundColor(mContext.getResources().getColor(R.color.color_delete))
-            .setDescription(mContext.getResources().getString(R.string.action_delete))
-            .setDescriptionTextColor(mContext.getResources().getColor(android.R.color.white))
             .setDrawableResId(R.drawable.ic_delete_white_24dp)
             .build();
     }
+    
+    @Override
+    public void onSwipe(int position, int direction) {
+        mDataset.remove(position);
+        notifyItemRemoved(position);
+    }
+    ...
+}
 ```
-* `onSwipe(int position)`: This gets called whenever an item is removed using a swipe. You have to call `notifyItemRemoved(position)` there after changing you data.
+
+### Customization
+
+You can easily customize the actions when swiping by using the `SwipeConfiguration` class which gives you full control over various aspects of this library. The following is a list of all currently available options. For all those there is also a corresponding `setLeft...()` and `setRight...()` flavor.
+
+* `setBackgroundColor(int resolvedColor)`: The background color that appears behind the list item.
+* `setDrawableResId(int resId)`: The resource id of the drawable shown as a hint for the action.
+* `setDescription(CharSequence description)`: The text shown as a hint for the action.
+* `setUndoDescription(CharSequence description)`: The text shown when the user has dismissed the item and is shown the option to undo the dismissal.
+* `setDescriptionTextColor(int resolvedColor)`: The text color used for the description and undo text.
+* `setUndoable(boolean undoable)`: Whether the action is undoable. If set to `true` the user will have the option to undo the action for 5 seconds, if set to `false` the item will be dismissed immediately.
 
 ## License
 
