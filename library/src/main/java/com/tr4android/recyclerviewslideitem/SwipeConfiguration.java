@@ -203,7 +203,7 @@ public class SwipeConfiguration {
         return mRightSwipeInterpolator;
     }
 
-    void setRightSwipeBehavior(float rightSwipeRange, Interpolator rightSwipeInterpolator) {
+    void setRightSwipeBehaviour(float rightSwipeRange, Interpolator rightSwipeInterpolator) {
         mRightSwipeRange = rightSwipeRange;
         mRightSwipeInterpolator = rightSwipeInterpolator;
     }
@@ -211,19 +211,19 @@ public class SwipeConfiguration {
     /**
      * Class for default swipe behaviour provided by the library
      */
-    public static class SwipeBehavior {
+    public static class SwipeBehaviour {
         // default interpolators
         private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
         private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
 
         // default SwipeBehaviour values
-        public static final SwipeBehavior NORMAL_SWIPE = new SwipeBehavior(1.0f, LINEAR_INTERPOLATOR);
-        public static final SwipeBehavior RESTRICTED_SWIPE = new SwipeBehavior(0.25f, DECELERATE_INTERPOLATOR);
+        public static final SwipeBehaviour NORMAL_SWIPE = new SwipeBehaviour(1.0f, LINEAR_INTERPOLATOR);
+        public static final SwipeBehaviour RESTRICTED_SWIPE = new SwipeBehaviour(0.25f, DECELERATE_INTERPOLATOR);
 
         public float range;
         public Interpolator interpolator;
 
-        SwipeBehavior(float range, Interpolator interpolator) {
+        SwipeBehaviour(float range, Interpolator interpolator) {
             this.range = range;
             this.interpolator = interpolator;
         }
@@ -473,25 +473,25 @@ public class SwipeConfiguration {
             return this;
         }
 
-        public Builder setLeftSwipeBehaviour(SwipeBehavior leftSwipeBehaviour) {
+        public Builder setLeftSwipeBehaviour(SwipeBehaviour leftSwipeBehaviour) {
             mLeftSwipeRange = leftSwipeBehaviour.range;
             mLeftSwipeInterpolator = leftSwipeBehaviour.interpolator;
             return this;
         }
 
-        public Builder setRightSwipeBehavior(float rightSwipeRange, Interpolator rightSwipeInterpolator) {
+        public Builder setRightSwipeBehaviour(float rightSwipeRange, Interpolator rightSwipeInterpolator) {
             mRightSwipeRange = rightSwipeRange;
             mRightSwipeInterpolator = rightSwipeInterpolator;
             return this;
         }
 
-        public Builder setRightSwipeBehavior(SwipeBehavior rightSwipeBehavior) {
-            mRightSwipeRange = rightSwipeBehavior.range;
-            mRightSwipeInterpolator = rightSwipeBehavior.interpolator;
+        public Builder setRightSwipeBehaviour(SwipeBehaviour rightSwipebehaviour) {
+            mRightSwipeRange = rightSwipebehaviour.range;
+            mRightSwipeInterpolator = rightSwipebehaviour.interpolator;
             return this;
         }
 
-        public Builder setSwipeBehavior(float swipeRange, Interpolator swipeInterpolator) {
+        public Builder setSwipeBehaviour(float swipeRange, Interpolator swipeInterpolator) {
             mLeftSwipeRange = swipeRange;
             mLeftSwipeInterpolator = swipeInterpolator;
             mRightSwipeRange = swipeRange;
@@ -499,11 +499,11 @@ public class SwipeConfiguration {
             return this;
         }
 
-        public Builder setSwipeBehavior(SwipeBehavior swipeBehavior) {
-            mLeftSwipeRange = swipeBehavior.range;
-            mLeftSwipeInterpolator = swipeBehavior.interpolator;
-            mRightSwipeRange = swipeBehavior.range;
-            mRightSwipeInterpolator = swipeBehavior.interpolator;
+        public Builder setSwipeBehaviour(SwipeBehaviour swipebehaviour) {
+            mLeftSwipeRange = swipebehaviour.range;
+            mLeftSwipeInterpolator = swipebehaviour.interpolator;
+            mRightSwipeRange = swipebehaviour.range;
+            mRightSwipeInterpolator = swipebehaviour.interpolator;
             return this;
         }
 
@@ -525,8 +525,14 @@ public class SwipeConfiguration {
             config.setRightUndoDescription(mRightUndoDescription);
             config.setLeftUndoButtonText(mLeftUndoButtonText);
             config.setRightUndoButtonText(mRightUndoButtonText);
+            if (mLeftSwipeInterpolator == null) {
+                setLeftSwipeBehaviour(SwipeBehaviour.NORMAL_SWIPE);
+            }
             config.setLeftSwipeBehaviour(mLeftSwipeRange, mLeftSwipeInterpolator);
-            config.setRightSwipeBehavior(mRightSwipeRange, mRightSwipeInterpolator);
+            if (mRightSwipeInterpolator == null) {
+                setRightSwipeBehaviour(SwipeBehaviour.NORMAL_SWIPE);
+            }
+            config.setRightSwipeBehaviour(mRightSwipeRange, mRightSwipeInterpolator);
             return config;
         }
     }
