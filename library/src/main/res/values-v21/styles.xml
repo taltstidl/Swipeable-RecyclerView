@@ -2,5 +2,7 @@
 <resources>
     <style name="UndoButtonStyle">
         <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>

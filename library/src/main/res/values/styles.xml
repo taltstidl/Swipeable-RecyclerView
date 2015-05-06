@@ -2,5 +2,6 @@
 <resources>
     <style name="UndoButtonStyle">
         <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>

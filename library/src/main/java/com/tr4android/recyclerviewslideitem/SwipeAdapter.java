@@ -26,7 +26,6 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         SwipeConfiguration configuration = onCreateSwipeConfiguration(position);
         swipeItem.setSwipeConfiguration(configuration);
         swipeItem.setSwipeListener(new SwipeItem.SwipeListener() {
-            @SuppressLint("NewApi")
             @Override
             public void onSwipeLeft() {
                 onSwipe(swipeHolder.getPosition());

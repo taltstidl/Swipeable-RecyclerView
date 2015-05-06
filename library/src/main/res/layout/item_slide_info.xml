@@ -13,8 +13,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center_vertical|start"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp" />
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp" />
 
         <TextView
             android:id="@+id/textViewDescription"
@@ -28,8 +28,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp" />
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp" />
     </FrameLayout>
 
     <FrameLayout
@@ -39,12 +39,13 @@
         android:visibility="invisible">
 
         <TextView
+            android:textSize="16sp"
             android:id="@+id/undoDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|start"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp" />
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp" />
 
         <Button
             android:id="@+id/undoButton"
@@ -53,8 +54,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/action_undo" />
     </FrameLayout>
 </FrameLayout>
