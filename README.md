@@ -3,6 +3,10 @@ A library that provides an easy and customizable way to implement a swipe to dis
 
 **Note:** This library is currently in active development and might thus not be suitable for production versions as of yet. If you are comfortable experimenting with this library though feel free to give it a spin and report any issues you find. A list of issues currently on the roadmap can be found [here](https://github.com/TR4Android/Swipeable-RecyclerView/issues).
 
+Here's how the demo application looks and behaves (you can download a debug apk of the demo [here](https://github.com/TR4Android/Swipeable-RecyclerView/releases/download/0.1.0/sample-debug.apk)):
+
+![Demo GIF](https://raw.githubusercontent.com/TR4Android/Swipeable-RecyclerView/master/art/demo.gif)
+
 ## Usage
 ### Importing the library
 
