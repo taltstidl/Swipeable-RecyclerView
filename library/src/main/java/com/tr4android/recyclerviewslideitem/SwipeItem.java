@@ -18,6 +18,7 @@ package com.tr4android.recyclerviewslideitem;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
@@ -26,7 +27,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,11 +50,15 @@ public class SwipeItem extends ViewGroup {
 
     private boolean mFirstLayout = true;
 
+    private int mTouchSlop;
+
     private int mPreviousPosition = 0;
 
     private boolean mHasPassedLeftThreshold;
 
     private boolean mHasPassedRightThreshold;
+
+    private boolean mParentScrollEnabled = true;
 
     public SwipeItem(Context context) {
         this(context, null);
@@ -63,6 +70,10 @@ public class SwipeItem extends ViewGroup {
 
     public SwipeItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        // scroll threshold
+        ViewConfiguration vc = ViewConfiguration.get(this.getContext());
+        mTouchSlop = vc.getScaledTouchSlop();
 
         mDragHelper = ViewDragHelper.create(this, new DragHelperCallback());
     }
@@ -124,6 +135,22 @@ public class SwipeItem extends ViewGroup {
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         mDragHelper.processTouchEvent(ev);
+        // handle parent scroll behaviour
+        if (Math.abs(mSwipeItem.getLeft()) > mTouchSlop) {
+            if (mParentScrollEnabled) {
+                // disable parent scrolling
+                ViewParent parent = getParent();
+                if (parent != null) getParent().requestDisallowInterceptTouchEvent(true);
+                mParentScrollEnabled = false;
+            }
+        } else {
+            if (!mParentScrollEnabled) {
+                // enable parent scrolling
+                ViewParent parent = getParent();
+                if (parent != null) getParent().requestDisallowInterceptTouchEvent(false);
+                mParentScrollEnabled = true;
+            }
+        }
         return true;
     }
 
