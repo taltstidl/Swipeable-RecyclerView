@@ -140,14 +140,14 @@ public class SwipeItem extends ViewGroup {
             if (mParentScrollEnabled) {
                 // disable parent scrolling
                 ViewParent parent = getParent();
-                if (parent != null) getParent().requestDisallowInterceptTouchEvent(true);
+                if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
                 mParentScrollEnabled = false;
             }
         } else {
             if (!mParentScrollEnabled) {
                 // enable parent scrolling
                 ViewParent parent = getParent();
-                if (parent != null) getParent().requestDisallowInterceptTouchEvent(false);
+                if (parent != null) parent.requestDisallowInterceptTouchEvent(false);
                 mParentScrollEnabled = true;
             }
         }
