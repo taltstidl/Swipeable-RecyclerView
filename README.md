@@ -60,8 +60,8 @@ public class SampleAdapter extends SwipeAdapter {
     @Override
     public SwipeConfiguration onCreateSwipeConfiguration(Context context, int position) {
         return new SwipeConfiguration.Builder(context)          
-            .setBackgroundColor(mContext.getResources().getColor(R.color.color_delete))
-            .setDrawableResId(R.drawable.ic_delete_white_24dp)
+            .setBackgroundColorResource(R.color.color_delete)
+            .setDrawableResource(R.drawable.ic_delete_white_24dp)
             .build();
     }
     
@@ -78,23 +78,39 @@ public class SampleAdapter extends SwipeAdapter {
 
 You can easily customize the actions when swiping by using the `SwipeConfiguration` class which gives you full control over various aspects of this library. The following is a list of all currently available options. For all those there is also a corresponding `setLeft...()` and `setRight...()` flavor.
 
-* `setBackgroundColor(int resolvedColor)`: The background color that appears behind the list item.
-* `setBackgroundColorId(int resId)`: The resource id of the background color that appears behind the list item.
-* `setDrawableResId(int resId)`: The resource id of the drawable shown as a hint for the action.
-* `setDescriptionTextColor(int resolvedColor)`: The text color used for the description and undo text.
-* `setDescriptionTextColorId(int resId)`: The resource id of the text color used for the description and undo text.
+* `setBackgroundColor(int color)`: The background color that appears behind the list item.
+* `setBackgroundColorResource(int resId)`: The resource id of the background color that appears behind the list item.
+* `setDrawableResource(int resId)`: The resource id of the drawable shown as a hint for the action.
+* `setDescriptionTextColor(int color)`: The text color used for the description and undo text.
+* `setDescriptionTextColorResource(int resId)`: The resource id of the text color used for the description and undo text.
 * `setDescription(CharSequence description)`: The text shown as a hint for the action.
-* `setDescriptionId(int resId)`: The resource id of the text shown as a hint for the action.
+* `setDescriptionResource(int resId)`: The resource id of the text shown as a hint for the action.
 * `setUndoDescription(CharSequence description)`: The text shown when the user has dismissed the item and is shown the option to undo the dismissal.
-* `setUndoDescriptionId(int resId)`: The resource id of the text shown when the user has dismissed the item and is shown the option to undo the dismissal.
+* `setUndoDescriptionResource(int resId)`: The resource id of the text shown when the user has dismissed the item and is shown the option to undo the dismissal.
 * `setUndoable(boolean undoable)`: Whether the action is undoable. If set to `true` the user will have the option to undo the action for 5 seconds, if set to `false` the item will be dismissed immediately.
 * `setSwipeBehaviour(SwipeBehavior swipeBehavior)`: The behaviour of the item when swiping. Takes one of the provided default behaviours `NORMAL_SWIPE` or `RESTRICTED_SWIPE`.
-* `setSwipeBehaviour(float swipeRange, Interpolator swipeInterpolator)`: The more customized behaviour of the item when swiping, where `swipeRange` indicates how far the item can be swiped (percentage of item width) and `swipeInterpolator` is the custom Interpolator used when calculating the item position while swiping.
-* `setCallbackEnabled(boolean callbackEnabled)`: Whether the swipe callback should be triggered on this action. If set to `true` you will receive a swipe action through `onSwipe(int position, int direction)`, if set to `false` you won't.
+* `setSwipeBehaviour(float range, Interpolator interpolator)`: The more customized behaviour of the item when swiping, where `range` indicates how far the item can be swiped (percentage of item width) and `interpolator` is the custom Interpolator used when calculating the item position while swiping.
+* `setCallbackEnabled(boolean enabled)`: Whether the swipe callback should be triggered on this action. If set to `true` you will receive a swipe action through `onSwipe(int position, int direction)`, if set to `false` you won't.
 
 ## License
 
 Copyright 2015 Thomas Robert Altstidl
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+## License of RecyclerView and AppCompat v4
+
+Copyright 2015 The Android Open Source Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
