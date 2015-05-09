@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2015 Thomas Robert Altstidl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.tr4android.recyclerviewslideitem;
 
 import android.content.Context;
@@ -14,15 +30,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-/**
- * Created by ThomasR on 28.04.2015.
- */
 public class SwipeItem extends ViewGroup {
     private static final String LOG_TAG = "SwipeItem";
 
     private final ViewDragHelper mDragHelper;
 
-    private SwipeListener mSwipeListener;
+    private OnSwipeListener mOnSwipeListener;
 
     private int mHorizontalDragRange;
 
@@ -155,11 +168,11 @@ public class SwipeItem extends ViewGroup {
         // TODO: handle configuration here if equal in both directions
     }
 
-    public void setSwipeListener(SwipeListener listener) {
-        mSwipeListener = listener;
+    public void setSwipeListener(OnSwipeListener listener) {
+        mOnSwipeListener = listener;
     }
 
-    public interface SwipeListener {
+    public interface OnSwipeListener {
         /**
          * Called when the SwipeItem was swiped away to the left
          */
@@ -172,14 +185,14 @@ public class SwipeItem extends ViewGroup {
     }
 
     void dispatchOnSwipeLeft() {
-        if (mSwipeListener != null && mConfiguration.isLeftCallbackEnabled()) {
-            mSwipeListener.onSwipeLeft();
+        if (mOnSwipeListener != null && mConfiguration.isLeftCallbackEnabled()) {
+            mOnSwipeListener.onSwipeLeft();
         }
     }
 
     void dispatchOnSwipeRight() {
-        if (mSwipeListener != null && mConfiguration.isRightCallbackEnabled()) {
-            mSwipeListener.onSwipeRight();
+        if (mOnSwipeListener != null && mConfiguration.isRightCallbackEnabled()) {
+            mOnSwipeListener.onSwipeRight();
         }
     }
 
@@ -247,14 +260,14 @@ public class SwipeItem extends ViewGroup {
             invalidate();
         }
     }
-    
+
     private void handlePositionChange(int newLeft) {
         Log.i(LOG_TAG, "New left: " + newLeft);
         if (newLeft > 0) {
             if (mPreviousPosition <= 0) {
                 // show right action
                 setSwipeBackgroundColor(mConfiguration.getRightBackgroundColor());
-                setSwipeRightImageResource(mConfiguration.getRightDrawableResId());
+                setSwipeRightImageResource(mConfiguration.getRightDrawableResource());
                 setSwipeDescription(mConfiguration.getRightDescription());
                 setSwipeDescriptionTextColor(mConfiguration.getRightDescriptionTextColor());
             }
@@ -268,12 +281,12 @@ public class SwipeItem extends ViewGroup {
             if (mPreviousPosition >= 0) {
                 // show left action
                 setSwipeBackgroundColor(mConfiguration.getLeftBackgroundColor());
-                setSwipeLeftImageResource(mConfiguration.getLeftDrawableResId());
+                setSwipeLeftImageResource(mConfiguration.getLeftDrawableResource());
                 setSwipeDescription(mConfiguration.getLeftDescription());
                 setSwipeDescriptionTextColor(mConfiguration.getLeftDescriptionTextColor());
             }
             float leftRange = mConfiguration.getLeftSwipeRange();
-            if (leftRange != 1.0f && newLeft < (- mHorizontalDragRange * leftRange * 0.75f)) {
+            if (leftRange != 1.0f && newLeft < (-mHorizontalDragRange * leftRange * 0.75f)) {
                 Log.i(LOG_TAG, "Threshold left passed");
                 mHasPassedLeftThreshold = true;
                 mHasPassedRightThreshold = false;
@@ -345,8 +358,8 @@ public class SwipeItem extends ViewGroup {
         View infoItem = mSwipeInfo.findViewById(R.id.infoLayout);
         ViewCompat.setAlpha(undoItem, show ? 0 : 1);
         ViewCompat.setAlpha(infoItem, show ? 1 : 0);
-        if(show) undoItem.setVisibility(VISIBLE);
-        if(!show) infoItem.setVisibility(VISIBLE);
+        if (show) undoItem.setVisibility(VISIBLE);
+        if (!show) infoItem.setVisibility(VISIBLE);
         final ViewPropertyAnimatorCompat undoAnimation = ViewCompat.animate(undoItem);
         undoAnimation.setDuration(300)
                 .alpha(show ? 1 : 0).setListener(new ViewPropertyAnimatorListener() {
@@ -358,7 +371,7 @@ public class SwipeItem extends ViewGroup {
             public void onAnimationEnd(View view) {
                 undoAnimation.setListener(null);
                 ViewCompat.setAlpha(view, show ? 1 : 0);
-                if(!show) view.setVisibility(INVISIBLE);
+                if (!show) view.setVisibility(INVISIBLE);
             }
 
             @Override

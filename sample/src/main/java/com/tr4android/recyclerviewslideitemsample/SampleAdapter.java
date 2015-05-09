@@ -63,13 +63,13 @@ public class SampleAdapter extends SwipeAdapter {
     @Override
     public SwipeConfiguration onCreateSwipeConfiguration(Context context, int position) {
         return new SwipeConfiguration.Builder(context)
-                .setLeftBackgroundColorId(R.color.color_delete)
-                .setRightBackgroundColorId(R.color.color_mark)
-                .setDrawableResId(R.drawable.ic_delete_white_24dp)
-                .setRightDrawableResId(R.drawable.ic_done_white_24dp)
+                .setLeftBackgroundColorResource(R.color.color_delete)
+                .setRightBackgroundColorResource(R.color.color_mark)
+                .setDrawableResource(R.drawable.ic_delete_white_24dp)
+                .setRightDrawableResource(R.drawable.ic_done_white_24dp)
                 .setLeftUndoable(true)
                 .setLeftUndoDescription(R.string.action_deleted)
-                .setDescriptionTextColorId(android.R.color.white)
+                .setDescriptionTextColorResource(android.R.color.white)
                 .setLeftSwipeBehaviour(SwipeConfiguration.SwipeBehaviour.NORMAL_SWIPE)
                 .setRightSwipeBehaviour(SwipeConfiguration.SwipeBehaviour.RESTRICTED_SWIPE)
                 .build();

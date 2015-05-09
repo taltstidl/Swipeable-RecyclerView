@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2015 Thomas Robert Altstidl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.tr4android.recyclerviewslideitem;
 
 import android.content.Context;
@@ -5,9 +21,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-/**
- * Copyright (c) 2015 TR4Android
- */
 public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int SWIPE_LEFT = -1;
     public static final int SWIPE_RIGHT = 1;
@@ -26,7 +39,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         final SwipeItem swipeItem = (SwipeItem) swipeHolder.itemView;
         SwipeConfiguration configuration = onCreateSwipeConfiguration(swipeItem.getContext(), position);
         swipeItem.setSwipeConfiguration(configuration);
-        swipeItem.setSwipeListener(new SwipeItem.SwipeListener() {
+        swipeItem.setSwipeListener(new SwipeItem.OnSwipeListener() {
             @Override
             public void onSwipeLeft() {
                 onSwipe(swipeHolder.getPosition(), SWIPE_LEFT);

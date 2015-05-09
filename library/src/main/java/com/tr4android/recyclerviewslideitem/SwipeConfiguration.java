@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2015 Thomas Robert Altstidl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.tr4android.recyclerviewslideitem;
 
 import android.content.Context;
@@ -8,178 +24,164 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
-/**
- * Copyright (c) 2015 TR4Android
- */
-
 public class SwipeConfiguration {
-    // left drawable resId
-    private int mLeftDrawableResId = 0;
-    // right drawable resId
-    private int mRightDrawableResId = 0;
-    // left description text
+    // drawable resId
+    private int mLeftDrawableResource = 0;
+    private int mRightDrawableResource = 0;
+    // description text
     private CharSequence mLeftDescription;
-    // right description text
     private CharSequence mRightDescription;
-    // left description text color
+    // description text color
     private int mLeftDescriptionTextColor;
-    // right description text color
     private int mRightDescriptionTextColor;
-    // left background color
+    // background color
     private int mLeftBackgroundColor;
-    // right background color
     private int mRightBackgroundColor;
-    // whether callback is enabled when swiping from left
+    // whether callback is enabled when swiping
     private boolean mLeftCallbackEnabled = true;
-    // whether callback is enabled when swiping from right
     private boolean mRightCallbackEnabled = true;
-    // whether action after swiping from left is undoable
+    // whether action after swiping is undoable
     private boolean mLeftUndoable;
-    // whether action after swiping from right is undoable
     private boolean mRightUndoable;
-    // left undo description text
+    // undo description text
     private CharSequence mLeftUndoDescription;
-    // right undo description text
     private CharSequence mRightUndoDescription;
-    // left undo button text
+    // undo button text
     private CharSequence mLeftUndoButtonText;
-    // right undo button text
     private CharSequence mRightUndoButtonText;
-    // right swipe range (value between 0 and 1.0)
+    // swipe range (value between 0 and 1.0)
     private float mLeftSwipeRange;
-    // right swipe range (value between 0 and 1.0)
     private float mRightSwipeRange;
-    // right interpolator used for swipe animation
+    // interpolator used for swipe animation
     private Interpolator mLeftSwipeInterpolator;
-    // right interpolator used for swipe animation
     private Interpolator mRightSwipeInterpolator;
 
-    int getLeftDrawableResId() {
-        return mLeftDrawableResId;
+    int getLeftDrawableResource() {
+        return mLeftDrawableResource;
     }
 
-    void setLeftDrawableResId(int leftDrawableResId) {
-        mLeftDrawableResId = leftDrawableResId;
+    void setLeftDrawableResource(int resId) {
+        mLeftDrawableResource = resId;
     }
 
-    int getRightDrawableResId() {
-        return mRightDrawableResId;
+    int getRightDrawableResource() {
+        return mRightDrawableResource;
     }
 
-    void setRightDrawableResId(int rightDrawableResId) {
-        mRightDrawableResId = rightDrawableResId;
+    void setRightDrawableResource(int resId) {
+        mRightDrawableResource = resId;
     }
 
     CharSequence getLeftDescription() {
         return mLeftDescription;
     }
 
-    void setLeftDescription(CharSequence leftDescription) {
-        mLeftDescription = leftDescription;
+    void setLeftDescription(CharSequence description) {
+        mLeftDescription = description;
     }
 
     CharSequence getRightDescription() {
         return mRightDescription;
     }
 
-    void setRightDescription(CharSequence rightDescription) {
-        mRightDescription = rightDescription;
+    void setRightDescription(CharSequence description) {
+        mRightDescription = description;
     }
 
     int getLeftDescriptionTextColor() {
         return mLeftDescriptionTextColor;
     }
 
-    void setLeftDescriptionTextColor(int leftDescriptionTextColor) {
-        mLeftDescriptionTextColor = leftDescriptionTextColor;
+    void setLeftDescriptionTextColor(int color) {
+        mLeftDescriptionTextColor = color;
     }
 
     int getRightDescriptionTextColor() {
         return mRightDescriptionTextColor;
     }
 
-    void setRightDescriptionTextColor(int rightDescriptionTextColor) {
-        mRightDescriptionTextColor = rightDescriptionTextColor;
+    void setRightDescriptionTextColor(int color) {
+        mRightDescriptionTextColor = color;
     }
 
     int getLeftBackgroundColor() {
         return mLeftBackgroundColor;
     }
 
-    void setLeftBackgroundColor(int leftBackgroundColor) {
-        mLeftBackgroundColor = leftBackgroundColor;
+    void setLeftBackgroundColor(int color) {
+        mLeftBackgroundColor = color;
     }
 
     int getRightBackgroundColor() {
         return mRightBackgroundColor;
     }
 
-    void setRightBackgroundColor(int rightBackgroundColor) {
-        mRightBackgroundColor = rightBackgroundColor;
+    void setRightBackgroundColor(int color) {
+        mRightBackgroundColor = color;
     }
 
     boolean isLeftCallbackEnabled() {
         return mLeftCallbackEnabled;
     }
 
-    void setLeftCallbackEnabled(boolean leftCallbackEnabled) {
-        mLeftCallbackEnabled = leftCallbackEnabled;
+    void setLeftCallbackEnabled(boolean enabled) {
+        mLeftCallbackEnabled = enabled;
     }
 
     boolean isRightCallbackEnabled() {
         return mRightCallbackEnabled;
     }
 
-    void setRightCallbackEnabled(boolean rightCallbackEnabled) {
-        mRightCallbackEnabled = rightCallbackEnabled;
+    void setRightCallbackEnabled(boolean enabled) {
+        mRightCallbackEnabled = enabled;
     }
 
     boolean isLeftUndoable() {
         return mLeftUndoable;
     }
 
-    void setLeftUndoable(boolean leftUndoable) {
-        mLeftUndoable = leftUndoable;
+    void setLeftUndoable(boolean undoable) {
+        mLeftUndoable = undoable;
     }
 
     boolean isRightUndoable() {
         return mRightUndoable;
     }
 
-    void setRightUndoable(boolean rightUndoable) {
-        mRightUndoable = rightUndoable;
+    void setRightUndoable(boolean undoable) {
+        mRightUndoable = undoable;
     }
 
     CharSequence getLeftUndoDescription() {
         return mLeftUndoDescription;
     }
 
-    void setLeftUndoDescription(CharSequence leftUndoDescription) {
-        mLeftUndoDescription = leftUndoDescription;
+    void setLeftUndoDescription(CharSequence description) {
+        mLeftUndoDescription = description;
     }
 
     CharSequence getRightUndoDescription() {
         return mRightUndoDescription;
     }
 
-    void setRightUndoDescription(CharSequence rightUndoDescription) {
-        mRightUndoDescription = rightUndoDescription;
+    void setRightUndoDescription(CharSequence description) {
+        mRightUndoDescription = description;
     }
 
     CharSequence getLeftUndoButtonText() {
         return mLeftUndoButtonText;
     }
 
-    void setLeftUndoButtonText(CharSequence leftUndoButtonText) {
-        mLeftUndoButtonText = leftUndoButtonText;
+    void setLeftUndoButtonText(CharSequence text) {
+        mLeftUndoButtonText = text;
     }
 
     CharSequence getRightUndoButtonText() {
         return mRightUndoButtonText;
     }
 
-    void setRightUndoButtonText(CharSequence rightUndoButtonText) {
-        mRightUndoButtonText = rightUndoButtonText;
+    void setRightUndoButtonText(CharSequence text) {
+        mRightUndoButtonText = text;
     }
 
     float getLeftSwipeRange() {
@@ -190,9 +192,9 @@ public class SwipeConfiguration {
         return mLeftSwipeInterpolator;
     }
 
-    void setLeftSwipeBehaviour(float leftSwipeRange, Interpolator leftSwipeInterpolator) {
-        mLeftSwipeRange = leftSwipeRange;
-        mLeftSwipeInterpolator = leftSwipeInterpolator;
+    void setLeftSwipeBehaviour(float range, Interpolator interpolator) {
+        mLeftSwipeRange = range;
+        mLeftSwipeInterpolator = interpolator;
     }
 
     float getRightSwipeRange() {
@@ -203,9 +205,9 @@ public class SwipeConfiguration {
         return mRightSwipeInterpolator;
     }
 
-    void setRightSwipeBehaviour(float rightSwipeRange, Interpolator rightSwipeInterpolator) {
-        mRightSwipeRange = rightSwipeRange;
-        mRightSwipeInterpolator = rightSwipeInterpolator;
+    void setRightSwipeBehaviour(float range, Interpolator interpolator) {
+        mRightSwipeRange = range;
+        mRightSwipeInterpolator = interpolator;
     }
 
     /**
@@ -234,8 +236,8 @@ public class SwipeConfiguration {
      */
     public static class Builder {
         private Context mContext;
-        private int mLeftDrawableResId = 0;
-        private int mRightDrawableResId = 0;
+        private int mLeftDrawableResource = 0;
+        private int mRightDrawableResource = 0;
         private CharSequence mLeftDescription;
         private CharSequence mRightDescription;
         private int mLeftDescriptionTextColor;
@@ -259,39 +261,39 @@ public class SwipeConfiguration {
             mContext = context;
         }
 
-        public Builder setLeftDrawableResId(@DrawableRes int leftDrawableResId) {
-            mLeftDrawableResId = leftDrawableResId;
+        public Builder setLeftDrawableResource(@DrawableRes int resId) {
+            mLeftDrawableResource = resId;
             return this;
         }
 
-        public Builder setRightDrawableResId(@DrawableRes int rightDrawableResId) {
-            mRightDrawableResId = rightDrawableResId;
+        public Builder setRightDrawableResource(@DrawableRes int resId) {
+            mRightDrawableResource = resId;
             return this;
         }
 
-        public Builder setDrawableResId(@DrawableRes int drawableResId) {
-            mLeftDrawableResId = drawableResId;
-            mRightDrawableResId = drawableResId;
+        public Builder setDrawableResource(@DrawableRes int resId) {
+            mLeftDrawableResource = resId;
+            mRightDrawableResource = resId;
             return this;
         }
 
-        public Builder setLeftDescription(CharSequence leftDescription) {
-            mLeftDescription = leftDescription;
+        public Builder setLeftDescription(CharSequence description) {
+            mLeftDescription = description;
             return this;
         }
 
-        public Builder setLeftDescription(@StringRes int resid) {
-            mLeftDescription = mContext.getString(resid);
+        public Builder setLeftDescription(@StringRes int resId) {
+            mLeftDescription = mContext.getString(resId);
             return this;
         }
 
-        public Builder setRightDescription(CharSequence rightDescription) {
-            mRightDescription = rightDescription;
+        public Builder setRightDescription(CharSequence description) {
+            mRightDescription = description;
             return this;
         }
 
-        public Builder setRightDescription(@StringRes int resid) {
-            mRightDescription = mContext.getString(resid);
+        public Builder setRightDescription(@StringRes int resId) {
+            mRightDescription = mContext.getString(resId);
             return this;
         }
 
@@ -301,99 +303,99 @@ public class SwipeConfiguration {
             return this;
         }
 
-        public Builder setDescription(@StringRes int resid) {
-            mLeftDescription = mContext.getString(resid);
-            mRightDescription = mContext.getString(resid);
+        public Builder setDescription(@StringRes int resId) {
+            mLeftDescription = mContext.getString(resId);
+            mRightDescription = mContext.getString(resId);
             return this;
         }
 
-        public Builder setLeftDescriptionTextColor(int leftDescriptionTextColor) {
-            mLeftDescriptionTextColor = leftDescriptionTextColor;
+        public Builder setLeftDescriptionTextColor(int color) {
+            mLeftDescriptionTextColor = color;
             return this;
         }
 
-        public Builder setLeftDescriptionTextColorResId(@ColorRes int resId) {
+        public Builder setLeftDescriptionTextColorResource(@ColorRes int resId) {
             mLeftDescriptionTextColor = mContext.getResources().getColor(resId);
             return this;
         }
 
-        public Builder setRightDescriptionTextColor(int rightDescriptionTextColor) {
-            mRightDescriptionTextColor = rightDescriptionTextColor;
+        public Builder setRightDescriptionTextColor(int color) {
+            mRightDescriptionTextColor = color;
             return this;
         }
 
-        public Builder setRightDescriptionTextColorId(@ColorRes int resId) {
+        public Builder setRightDescriptionTextColorResource(@ColorRes int resId) {
             mRightDescriptionTextColor = mContext.getResources().getColor(resId);
             return this;
         }
 
-        public Builder setDescriptionTextColor(int descriptionTextColor) {
-            mLeftDescriptionTextColor = descriptionTextColor;
-            mRightDescriptionTextColor = descriptionTextColor;
+        public Builder setDescriptionTextColor(int color) {
+            mLeftDescriptionTextColor = color;
+            mRightDescriptionTextColor = color;
             return this;
         }
 
-        public Builder setDescriptionTextColorId(@ColorRes int resId) {
+        public Builder setDescriptionTextColorResource(@ColorRes int resId) {
             mLeftDescriptionTextColor = mContext.getResources().getColor(resId);
             mRightDescriptionTextColor = mContext.getResources().getColor(resId);
             return this;
         }
 
-        public Builder setLeftBackgroundColor(int leftBackgroundColor) {
-            mLeftBackgroundColor = leftBackgroundColor;
+        public Builder setLeftBackgroundColor(int color) {
+            mLeftBackgroundColor = color;
             return this;
         }
 
-        public Builder setLeftBackgroundColorId(@ColorRes int resId) {
+        public Builder setLeftBackgroundColorResource(@ColorRes int resId) {
             mLeftBackgroundColor = mContext.getResources().getColor(resId);
             return this;
         }
 
-        public Builder setRightBackgroundColor(int rightBackgroundColor) {
-            mRightBackgroundColor = rightBackgroundColor;
+        public Builder setRightBackgroundColor(int color) {
+            mRightBackgroundColor = color;
             return this;
         }
 
-        public Builder setRightBackgroundColorId(@ColorRes int resId) {
+        public Builder setRightBackgroundColorResource(@ColorRes int resId) {
             mRightBackgroundColor = mContext.getResources().getColor(resId);
             return this;
         }
 
-        public Builder setBackgroundColor(int backgroundColor) {
-            mLeftBackgroundColor = backgroundColor;
-            mRightBackgroundColor = backgroundColor;
+        public Builder setBackgroundColor(int color) {
+            mLeftBackgroundColor = color;
+            mRightBackgroundColor = color;
             return this;
         }
 
-        public Builder setBackgroundColorId(@ColorRes int resId) {
+        public Builder setBackgroundColorResource(@ColorRes int resId) {
             mLeftBackgroundColor = mContext.getResources().getColor(resId);
             mRightBackgroundColor = mContext.getResources().getColor(resId);
             return this;
         }
 
-        public Builder setLeftCallbackEnabled(boolean leftCallbackEnabled) {
-            mLeftCallbackEnabled = leftCallbackEnabled;
+        public Builder setLeftCallbackEnabled(boolean enabled) {
+            mLeftCallbackEnabled = enabled;
             return this;
         }
 
-        public Builder setRightCallbackEnabled(boolean rightCallbackEnabled) {
-            mRightCallbackEnabled = rightCallbackEnabled;
+        public Builder setRightCallbackEnabled(boolean enabled) {
+            mRightCallbackEnabled = enabled;
             return this;
         }
 
-        public Builder setCallbackEnabled(boolean callbackEnabled) {
-            mLeftCallbackEnabled = callbackEnabled;
-            mRightCallbackEnabled = callbackEnabled;
+        public Builder setCallbackEnabled(boolean enabled) {
+            mLeftCallbackEnabled = enabled;
+            mRightCallbackEnabled = enabled;
             return this;
         }
 
-        public Builder setLeftUndoable(boolean leftUndoable) {
-            mLeftUndoable = leftUndoable;
+        public Builder setLeftUndoable(boolean undoable) {
+            mLeftUndoable = undoable;
             return this;
         }
 
-        public Builder setRightUndoable(boolean rightUndoable) {
-            mRightUndoable = rightUndoable;
+        public Builder setRightUndoable(boolean undoable) {
+            mRightUndoable = undoable;
             return this;
         }
 
@@ -403,8 +405,8 @@ public class SwipeConfiguration {
             return this;
         }
 
-        public Builder setLeftUndoDescription(CharSequence leftUndoDescription) {
-            mLeftUndoDescription = leftUndoDescription;
+        public Builder setLeftUndoDescription(CharSequence description) {
+            mLeftUndoDescription = description;
             return this;
         }
 
@@ -413,104 +415,104 @@ public class SwipeConfiguration {
             return this;
         }
 
-        public Builder setRightUndoDescription(CharSequence rightUndoDescription) {
-            mRightUndoDescription = rightUndoDescription;
+        public Builder setRightUndoDescription(CharSequence description) {
+            mRightUndoDescription = description;
             return this;
         }
 
-        public Builder setRightUndoDescription(@StringRes int resid) {
-            mRightUndoDescription = mContext.getString(resid);
+        public Builder setRightUndoDescription(@StringRes int resId) {
+            mRightUndoDescription = mContext.getString(resId);
             return this;
         }
 
-        public Builder setUndoDescription(CharSequence undoDescription) {
-            mLeftUndoDescription = undoDescription;
-            mRightUndoDescription = undoDescription;
+        public Builder setUndoDescription(CharSequence description) {
+            mLeftUndoDescription = description;
+            mRightUndoDescription = description;
             return this;
         }
 
-        public Builder setUndoDescription(@StringRes int resid) {
-            mLeftUndoDescription = mContext.getString(resid);
-            mRightUndoDescription = mContext.getString(resid);
+        public Builder setUndoDescription(@StringRes int resId) {
+            mLeftUndoDescription = mContext.getString(resId);
+            mRightUndoDescription = mContext.getString(resId);
             return this;
         }
 
-        public Builder setLeftUndoButtonText(CharSequence leftUndoButtonText) {
-            mLeftUndoButtonText = leftUndoButtonText;
+        public Builder setLeftUndoButtonText(CharSequence text) {
+            mLeftUndoButtonText = text;
             return this;
         }
 
-        public Builder setLeftUndoButtonText(@StringRes int resid) {
-            mLeftUndoButtonText = mContext.getString(resid);
+        public Builder setLeftUndoButtonText(@StringRes int resId) {
+            mLeftUndoButtonText = mContext.getString(resId);
             return this;
         }
 
-        public Builder setRightUndoButtonText(CharSequence rightUndoButtonText) {
-            mRightUndoButtonText = rightUndoButtonText;
+        public Builder setRightUndoButtonText(CharSequence text) {
+            mRightUndoButtonText = text;
             return this;
         }
 
-        public Builder setRightUndoButtonText(@StringRes int resid) {
-            mRightUndoButtonText = mContext.getString(resid);
+        public Builder setRightUndoButtonText(@StringRes int resId) {
+            mRightUndoButtonText = mContext.getString(resId);
             return this;
         }
 
-        public Builder setUndoButtonText(CharSequence undoButtonText) {
-            mLeftUndoButtonText = undoButtonText;
-            mRightUndoButtonText = undoButtonText;
+        public Builder setUndoButtonText(CharSequence text) {
+            mLeftUndoButtonText = text;
+            mRightUndoButtonText = text;
             return this;
         }
 
-        public Builder setUndoButtonText(@StringRes int resid) {
-            mLeftUndoButtonText = mContext.getString(resid);
-            mRightUndoButtonText = mContext.getString(resid);
+        public Builder setUndoButtonText(@StringRes int resId) {
+            mLeftUndoButtonText = mContext.getString(resId);
+            mRightUndoButtonText = mContext.getString(resId);
             return this;
         }
 
-        public Builder setLeftSwipeBehaviour(float leftSwipeRange, Interpolator leftSwipeInterpolator) {
-            mLeftSwipeRange = leftSwipeRange;
-            mLeftSwipeInterpolator = leftSwipeInterpolator;
+        public Builder setLeftSwipeBehaviour(float range, Interpolator interpolator) {
+            mLeftSwipeRange = range;
+            mLeftSwipeInterpolator = interpolator;
             return this;
         }
 
-        public Builder setLeftSwipeBehaviour(SwipeBehaviour leftSwipeBehaviour) {
-            mLeftSwipeRange = leftSwipeBehaviour.range;
-            mLeftSwipeInterpolator = leftSwipeBehaviour.interpolator;
+        public Builder setLeftSwipeBehaviour(SwipeBehaviour swipeBehaviour) {
+            mLeftSwipeRange = swipeBehaviour.range;
+            mLeftSwipeInterpolator = swipeBehaviour.interpolator;
             return this;
         }
 
-        public Builder setRightSwipeBehaviour(float rightSwipeRange, Interpolator rightSwipeInterpolator) {
-            mRightSwipeRange = rightSwipeRange;
-            mRightSwipeInterpolator = rightSwipeInterpolator;
+        public Builder setRightSwipeBehaviour(float range, Interpolator interpolator) {
+            mRightSwipeRange = range;
+            mRightSwipeInterpolator = interpolator;
             return this;
         }
 
-        public Builder setRightSwipeBehaviour(SwipeBehaviour rightSwipebehaviour) {
-            mRightSwipeRange = rightSwipebehaviour.range;
-            mRightSwipeInterpolator = rightSwipebehaviour.interpolator;
+        public Builder setRightSwipeBehaviour(SwipeBehaviour swipeBehaviour) {
+            mRightSwipeRange = swipeBehaviour.range;
+            mRightSwipeInterpolator = swipeBehaviour.interpolator;
             return this;
         }
 
-        public Builder setSwipeBehaviour(float swipeRange, Interpolator swipeInterpolator) {
-            mLeftSwipeRange = swipeRange;
-            mLeftSwipeInterpolator = swipeInterpolator;
-            mRightSwipeRange = swipeRange;
-            mRightSwipeInterpolator = swipeInterpolator;
+        public Builder setSwipeBehaviour(float range, Interpolator interpolator) {
+            mLeftSwipeRange = range;
+            mLeftSwipeInterpolator = interpolator;
+            mRightSwipeRange = range;
+            mRightSwipeInterpolator = interpolator;
             return this;
         }
 
-        public Builder setSwipeBehaviour(SwipeBehaviour swipebehaviour) {
-            mLeftSwipeRange = swipebehaviour.range;
-            mLeftSwipeInterpolator = swipebehaviour.interpolator;
-            mRightSwipeRange = swipebehaviour.range;
-            mRightSwipeInterpolator = swipebehaviour.interpolator;
+        public Builder setSwipeBehaviour(SwipeBehaviour swipeBehaviour) {
+            mLeftSwipeRange = swipeBehaviour.range;
+            mLeftSwipeInterpolator = swipeBehaviour.interpolator;
+            mRightSwipeRange = swipeBehaviour.range;
+            mRightSwipeInterpolator = swipeBehaviour.interpolator;
             return this;
         }
 
         public SwipeConfiguration build() {
             SwipeConfiguration config = new SwipeConfiguration();
-            config.setLeftDrawableResId(mLeftDrawableResId);
-            config.setRightDrawableResId(mRightDrawableResId);
+            config.setLeftDrawableResource(mLeftDrawableResource);
+            config.setRightDrawableResource(mRightDrawableResource);
             config.setLeftDescription(mLeftDescription);
             config.setRightDescription(mRightDescription);
             config.setLeftDescriptionTextColor(mLeftDescriptionTextColor);
