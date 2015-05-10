@@ -17,7 +17,6 @@
 package com.tr4android.recyclerviewslideitem;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;

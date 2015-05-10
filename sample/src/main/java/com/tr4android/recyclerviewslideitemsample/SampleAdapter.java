@@ -24,7 +24,7 @@ public class SampleAdapter extends SwipeAdapter {
 
     private Context mContext;
 
-    public SampleAdapter(Context context, RecyclerView recyclerView) {
+    public SampleAdapter(Context context) {
         mContext = context;
         // create dummy dataset
         mDataset = new ArrayList<>();
@@ -48,8 +48,7 @@ public class SampleAdapter extends SwipeAdapter {
     public RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_sample, parent, true);
-        SampleViewHolder sampleViewHolder = new SampleViewHolder(v);
-        return sampleViewHolder;
+        return new SampleViewHolder(v);
     }
 
     @Override

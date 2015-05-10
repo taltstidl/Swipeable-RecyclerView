@@ -36,8 +36,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         SwipeItem item = (SwipeItem) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_swipe, parent, false);
-        RecyclerView.ViewHolder holder = onCreateSwipeViewHolder(item, viewType);
-        return holder;
+        return onCreateSwipeViewHolder(item, viewType);
     }
 
     @Override
