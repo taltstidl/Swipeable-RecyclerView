@@ -49,6 +49,26 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             public void onSwipeRight() {
                 onSwipe(swipeHolder.getPosition(), SWIPE_RIGHT);
             }
+
+            @Override
+            public void onSwipeLeftUndoStarted() {
+                
+            }
+
+            @Override
+            public void onSwipeRightUndoStarted() {
+
+            }
+
+            @Override
+            public void onSwipeLeftUndoClicked() {
+
+            }
+
+            @Override
+            public void onSwipeRightUndoClicked() {
+
+            }
         });
         onBindSwipeViewHolder(holder, position);
     }

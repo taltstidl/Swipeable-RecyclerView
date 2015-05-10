@@ -60,6 +60,10 @@ public class SwipeItem extends ViewGroup {
 
     private boolean mParentScrollEnabled = true;
 
+    protected enum SwipeState {
+        LEFT_UNDO, RIGHT_UNDO, NORMAL
+    }
+
     public SwipeItem(Context context) {
         this(context, null);
     }
@@ -195,6 +199,24 @@ public class SwipeItem extends ViewGroup {
         // TODO: handle configuration here if equal in both directions
     }
 
+    protected void setSwipeState(SwipeState state) {
+        switch (state) {
+            case LEFT_UNDO:
+                mSwipeItem.offsetLeftAndRight(-mHorizontalDragRange);
+                mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(INVISIBLE);
+                mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(VISIBLE);
+                break;
+            case RIGHT_UNDO:
+                mSwipeItem.offsetLeftAndRight(mHorizontalDragRange);
+                mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(INVISIBLE);
+                mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(VISIBLE);
+                break;
+            default:
+                mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(INVISIBLE);
+                mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(VISIBLE);
+        }
+    }
+
     public void setSwipeListener(OnSwipeListener listener) {
         mOnSwipeListener = listener;
     }
@@ -203,12 +225,32 @@ public class SwipeItem extends ViewGroup {
         /**
          * Called when the SwipeItem was swiped away to the left
          */
-        public void onSwipeLeft();
+        void onSwipeLeft();
 
         /**
          * Called when the SwipeItem was swiped away to the right
          */
-        public void onSwipeRight();
+        void onSwipeRight();
+
+        /**
+         * Called when the SwipeItem was swiped away to the left and an undo action is started
+         */
+        void onSwipeLeftUndoStarted();
+
+        /**
+         * Called when the SwipeItem was swiped away to the right and an undo action is started
+         */
+        void onSwipeRightUndoStarted();
+
+        /**
+         * Called when the SwipeItem was swiped away to the left and undo was clicked
+         */
+        void onSwipeLeftUndoClicked();
+
+        /**
+         * Called when the SwipeItem was swiped away to the right and undo was clicked
+         */
+        void onSwipeRightUndoClicked();
     }
 
     void dispatchOnSwipeLeft() {
@@ -220,6 +262,30 @@ public class SwipeItem extends ViewGroup {
     void dispatchOnSwipeRight() {
         if (mOnSwipeListener != null && mConfiguration.isRightCallbackEnabled()) {
             mOnSwipeListener.onSwipeRight();
+        }
+    }
+
+    void dispatchOnSwipeLeftUndoStarted() {
+        if (mOnSwipeListener != null && mConfiguration.isLeftCallbackEnabled()) {
+            mOnSwipeListener.onSwipeLeftUndoStarted();
+        }
+    }
+
+    void dispatchOnSwipeRightUndoStarted() {
+        if (mOnSwipeListener != null && mConfiguration.isRightCallbackEnabled()) {
+            mOnSwipeListener.onSwipeRightUndoStarted();
+        }
+    }
+
+    void dispatchOnSwipeLeftUndoClicked() {
+        if (mOnSwipeListener != null && mConfiguration.isLeftCallbackEnabled()) {
+            mOnSwipeListener.onSwipeLeftUndoClicked();
+        }
+    }
+
+    void dispatchOnSwipeRightUndoClicked() {
+        if (mOnSwipeListener != null && mConfiguration.isRightCallbackEnabled()) {
+            mOnSwipeListener.onSwipeRightUndoClicked();
         }
     }
 
@@ -325,24 +391,19 @@ public class SwipeItem extends ViewGroup {
     private void handleLeftSwipe() {
         if (mConfiguration.isLeftUndoable()) {
             setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
-            final Handler handler = new Handler();
-            final Runnable removeItemRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    dispatchOnSwipeLeft();
-                }
-            };
-            handler.postDelayed(removeItemRunnable, 5000); // 5 sec to undo
             showUndoAction(true);
             mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    handler.removeCallbacks(removeItemRunnable);
                     showUndoAction(false);
                     mSwipeInfo.setOnClickListener(null);
                     swipeBack();
+                    // let swipe adapter handle canceled swipe
+                    dispatchOnSwipeLeftUndoClicked();
                 }
             });
+            // let swipe adapter handle started swipe with undo action
+            dispatchOnSwipeLeftUndoStarted();
         } else {
             dispatchOnSwipeLeft();
         }
@@ -351,24 +412,19 @@ public class SwipeItem extends ViewGroup {
     private void handleRightSwipe() {
         if (mConfiguration.isRightUndoable()) {
             setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
-            final Handler handler = new Handler();
-            final Runnable removeItemRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    dispatchOnSwipeRight();
-                }
-            };
-            handler.postDelayed(removeItemRunnable, 5000); // 5 sec to undo
             showUndoAction(true);
             mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    handler.removeCallbacks(removeItemRunnable);
                     showUndoAction(false);
                     mSwipeInfo.setOnClickListener(null);
                     swipeBack();
+                    // let swipe adapter handle canceled swipe
+                    dispatchOnSwipeRightUndoClicked();
                 }
             });
+            // let swipe adapter handle started swipe with undo action
+            dispatchOnSwipeRightUndoStarted();
         } else {
             dispatchOnSwipeRight();
         }
