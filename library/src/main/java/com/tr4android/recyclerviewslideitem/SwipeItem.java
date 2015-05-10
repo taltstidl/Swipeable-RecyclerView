@@ -147,7 +147,7 @@ public class SwipeItem extends ViewGroup {
                 if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
                 mParentScrollEnabled = false;
             }
-        } else {
+        } else if (MotionEventCompat.getActionMasked(ev) == MotionEvent.ACTION_UP || MotionEventCompat.getActionMasked(ev) == MotionEvent.ACTION_CANCEL){
             if (!mParentScrollEnabled) {
                 // enable parent scrolling
                 ViewParent parent = getParent();
