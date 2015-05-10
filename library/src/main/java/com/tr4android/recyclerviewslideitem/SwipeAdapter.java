@@ -17,6 +17,7 @@
 package com.tr4android.recyclerviewslideitem;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -24,6 +25,12 @@ import android.view.ViewGroup;
 public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int SWIPE_LEFT = -1;
     public static final int SWIPE_RIGHT = 1;
+    public static final int TIME_POST_DELAYED = 5000; // in ms
+
+    private int mRunnablePosition = RecyclerView.NO_POSITION;
+    private int mRunnableDirection;
+    private Runnable mRunnable;
+    private Handler mHandler = new Handler();
 
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,35 +49,93 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         swipeItem.setSwipeListener(new SwipeItem.OnSwipeListener() {
             @Override
             public void onSwipeLeft() {
-                onSwipe(swipeHolder.getPosition(), SWIPE_LEFT);
+                onSwipe(swipeHolder.getAdapterPosition(), SWIPE_LEFT);
             }
 
             @Override
             public void onSwipeRight() {
-                onSwipe(swipeHolder.getPosition(), SWIPE_RIGHT);
+                onSwipe(swipeHolder.getAdapterPosition(), SWIPE_RIGHT);
             }
 
             @Override
             public void onSwipeLeftUndoStarted() {
-                
+                handleLastRunnable();
+                final int position = swipeHolder.getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    mRunnablePosition = position;
+                    mRunnableDirection = SWIPE_LEFT;
+                    mRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            clearRunnable();
+                            onSwipe(position, SWIPE_LEFT);
+                        }
+                    };
+                    mHandler.postDelayed(mRunnable, TIME_POST_DELAYED);
+                }
             }
 
             @Override
             public void onSwipeRightUndoStarted() {
-
+                handleLastRunnable();
+                final int position = swipeHolder.getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    mRunnablePosition = position;
+                    mRunnableDirection = SWIPE_RIGHT;
+                    mRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            clearRunnable();
+                            onSwipe(position, SWIPE_RIGHT);
+                        }
+                    };
+                    mHandler.postDelayed(mRunnable, TIME_POST_DELAYED);
+                }
             }
 
             @Override
             public void onSwipeLeftUndoClicked() {
-
+                final int position = swipeHolder.getAdapterPosition();
+                if (position == mRunnablePosition) {
+                    mHandler.removeCallbacks(mRunnable);
+                    clearRunnable();
+                }
             }
 
             @Override
             public void onSwipeRightUndoClicked() {
-
+                final int position = swipeHolder.getAdapterPosition();
+                if (position == mRunnablePosition) {
+                    mHandler.removeCallbacks(mRunnable);
+                    clearRunnable();
+                }
             }
         });
+        // restore swipe state
+        if (position == mRunnablePosition) {
+            if (mRunnableDirection == SWIPE_LEFT) {
+                swipeItem.setSwipeState(SwipeItem.SwipeState.LEFT_UNDO);
+            } else {
+                swipeItem.setSwipeState(SwipeItem.SwipeState.RIGHT_UNDO);
+            }
+        } else {
+            swipeItem.setSwipeState(SwipeItem.SwipeState.NORMAL);
+        }
         onBindSwipeViewHolder(holder, position);
+    }
+
+    private void handleLastRunnable() {
+        if (mRunnablePosition != RecyclerView.NO_POSITION) {
+            mHandler.removeCallbacks(mRunnable);
+            onSwipe(mRunnablePosition, mRunnableDirection);
+            clearRunnable();
+        }
+    }
+
+    private void clearRunnable() {
+        mRunnablePosition = RecyclerView.NO_POSITION;
+        mRunnable = null;
+        mRunnableDirection = 0;
     }
 
     public abstract RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int viewType);
