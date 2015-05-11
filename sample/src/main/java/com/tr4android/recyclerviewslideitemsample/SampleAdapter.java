@@ -31,6 +31,7 @@ public class SampleAdapter extends SwipeAdapter {
         for (int i = 0; i < 25; i++) {
             mDataset.add("person" + String.valueOf(i + 1) + "@sample.com");
         }
+        initialize();
     }
 
     public class SampleViewHolder extends RecyclerView.ViewHolder {
