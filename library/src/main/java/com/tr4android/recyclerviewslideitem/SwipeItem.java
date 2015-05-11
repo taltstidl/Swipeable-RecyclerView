@@ -57,13 +57,34 @@ public class SwipeItem extends ViewGroup {
 
     private boolean mHasPassedRightThreshold;
 
-    private boolean mParentScrollEnabled = true;
-
     protected enum SwipeState {
         LEFT_UNDO, RIGHT_UNDO, NORMAL
     }
 
     private SwipeState mState;
+
+    // click listeners for undo actions
+    private final OnClickListener leftUndoClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            showUndoAction(false);
+            mSwipeInfo.setOnClickListener(null);
+            swipeBack();
+            // let swipe adapter handle canceled swipe
+            dispatchOnSwipeLeftUndoClicked();
+        }
+    };
+
+    private final OnClickListener rightUndoClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            showUndoAction(false);
+            mSwipeInfo.setOnClickListener(null);
+            swipeBack();
+            // let swipe adapter handle canceled swipe
+            dispatchOnSwipeRightUndoClicked();
+        }
+    };
 
     public SwipeItem(Context context) {
         this(context, null);
@@ -87,12 +108,14 @@ public class SwipeItem extends ViewGroup {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         mFirstLayout = true;
+        mPreviousPosition = 0;
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mFirstLayout = true;
+        mPreviousPosition = 0;
     }
 
     @Override
@@ -100,12 +123,12 @@ public class SwipeItem extends ViewGroup {
         super.onSizeChanged(w, h, oldw, oldh);
         if (h != oldh) {
             mFirstLayout = true;
+            mPreviousPosition = 0;
         }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Log.i(LOG_TAG, "Measure done");
         // measure child
         mSwipeInfo = getChildAt(0);
         mSwipeItem = getChildAt(1);
@@ -120,7 +143,6 @@ public class SwipeItem extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        Log.i(LOG_TAG, "Layout done");
         final int parentLeft = getPaddingLeft();
         final int parentRight = right - left - getPaddingRight();
         final int parentTop = getPaddingTop();
@@ -128,7 +150,6 @@ public class SwipeItem extends ViewGroup {
         if (mFirstLayout) {
             int childLeft = parentLeft;
             int childRight = parentRight;
-            Log.i(LOG_TAG, " ... with state: " + mState.name());
             switch (mState) {
                 case LEFT_UNDO:
                     childLeft -= mHorizontalDragRange;
@@ -157,19 +178,13 @@ public class SwipeItem extends ViewGroup {
         mDragHelper.processTouchEvent(ev);
         // handle parent scroll behaviour
         if (Math.abs(mSwipeItem.getLeft()) > mTouchSlop) {
-            if (mParentScrollEnabled) {
                 // disable parent scrolling
                 ViewParent parent = getParent();
                 if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
-                mParentScrollEnabled = false;
-            }
         } else if (MotionEventCompat.getActionMasked(ev) == MotionEvent.ACTION_UP || MotionEventCompat.getActionMasked(ev) == MotionEvent.ACTION_CANCEL){
-            if (!mParentScrollEnabled) {
                 // enable parent scrolling
                 ViewParent parent = getParent();
                 if (parent != null) parent.requestDisallowInterceptTouchEvent(false);
-                mParentScrollEnabled = true;
-            }
         }
         return true;
     }
@@ -217,17 +232,24 @@ public class SwipeItem extends ViewGroup {
 
     protected void setSwipeState(SwipeState state) {
         mState = state;
-        Log.i(LOG_TAG, "Setting new SwipeState - " + state.name());
         switch (state) {
             case LEFT_UNDO:
+                setSwipeBackgroundColor(mConfiguration.getLeftBackgroundColor());
+                setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
+                setSwipeDescriptionTextColor(mConfiguration.getLeftDescriptionTextColor());
+                mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
                 mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(INVISIBLE);
                 mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(VISIBLE);
                 break;
             case RIGHT_UNDO:
+                setSwipeBackgroundColor(mConfiguration.getRightBackgroundColor());
+                setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
+                setSwipeDescriptionTextColor(mConfiguration.getRightDescriptionTextColor());
+                mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
                 mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(INVISIBLE);
                 mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(VISIBLE);
                 break;
-            default:
+            case NORMAL:
                 mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(INVISIBLE);
                 mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(VISIBLE);
         }
@@ -405,16 +427,7 @@ public class SwipeItem extends ViewGroup {
         if (mConfiguration.isLeftUndoable()) {
             setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
             showUndoAction(true);
-            mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showUndoAction(false);
-                    mSwipeInfo.setOnClickListener(null);
-                    swipeBack();
-                    // let swipe adapter handle canceled swipe
-                    dispatchOnSwipeLeftUndoClicked();
-                }
-            });
+            mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
             // let swipe adapter handle started swipe with undo action
             dispatchOnSwipeLeftUndoStarted();
         } else {
@@ -426,16 +439,7 @@ public class SwipeItem extends ViewGroup {
         if (mConfiguration.isRightUndoable()) {
             setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
             showUndoAction(true);
-            mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showUndoAction(false);
-                    mSwipeInfo.setOnClickListener(null);
-                    swipeBack();
-                    // let swipe adapter handle canceled swipe
-                    dispatchOnSwipeRightUndoClicked();
-                }
-            });
+            mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
             // let swipe adapter handle started swipe with undo action
             dispatchOnSwipeRightUndoStarted();
         } else {
