@@ -63,6 +63,8 @@ public class SwipeItem extends ViewGroup {
         LEFT_UNDO, RIGHT_UNDO, NORMAL
     }
 
+    private SwipeState mState;
+
     public SwipeItem(Context context) {
         this(context, null);
     }
@@ -103,6 +105,7 @@ public class SwipeItem extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        Log.i(LOG_TAG, "Measure done");
         // measure child
         mSwipeInfo = getChildAt(0);
         mSwipeItem = getChildAt(1);
@@ -117,13 +120,27 @@ public class SwipeItem extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        Log.i(LOG_TAG, "Layout done");
         final int parentLeft = getPaddingLeft();
         final int parentRight = right - left - getPaddingRight();
         final int parentTop = getPaddingTop();
 
         if (mFirstLayout) {
+            int childLeft = parentLeft;
+            int childRight = parentRight;
+            Log.i(LOG_TAG, " ... with state: " + mState.name());
+            switch (mState) {
+                case LEFT_UNDO:
+                    childLeft -= mHorizontalDragRange;
+                    childRight -= mHorizontalDragRange;
+                    break;
+                case RIGHT_UNDO:
+                    childLeft += mHorizontalDragRange;
+                    childRight += mHorizontalDragRange;
+                    break;
+            }
             mHorizontalDragRange = getMeasuredWidth();
-            mSwipeItem.layout(parentLeft, parentTop, parentRight, parentTop + mSwipeItem.getMeasuredHeight());
+            mSwipeItem.layout(childLeft, parentTop, childRight, parentTop + mSwipeItem.getMeasuredHeight());
             mFirstLayout = false;
         }
 
@@ -199,14 +216,14 @@ public class SwipeItem extends ViewGroup {
     }
 
     protected void setSwipeState(SwipeState state) {
+        mState = state;
+        Log.i(LOG_TAG, "Setting new SwipeState - " + state.name());
         switch (state) {
             case LEFT_UNDO:
-                mSwipeItem.offsetLeftAndRight(-mHorizontalDragRange);
                 mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(INVISIBLE);
                 mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(VISIBLE);
                 break;
             case RIGHT_UNDO:
-                mSwipeItem.offsetLeftAndRight(mHorizontalDragRange);
                 mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(INVISIBLE);
                 mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(VISIBLE);
                 break;
@@ -354,7 +371,6 @@ public class SwipeItem extends ViewGroup {
     }
 
     private void handlePositionChange(int newLeft) {
-        Log.i(LOG_TAG, "New left: " + newLeft);
         if (newLeft > 0) {
             if (mPreviousPosition <= 0) {
                 // show right action
@@ -365,7 +381,6 @@ public class SwipeItem extends ViewGroup {
             }
             float rightRange = mConfiguration.getRightSwipeRange();
             if (rightRange != 1.0f && newLeft > Math.round(mHorizontalDragRange * rightRange * 0.75f)) {
-                Log.i(LOG_TAG, "Threshold right passed");
                 mHasPassedRightThreshold = true;
                 mHasPassedLeftThreshold = false;
             }
@@ -379,7 +394,6 @@ public class SwipeItem extends ViewGroup {
             }
             float leftRange = mConfiguration.getLeftSwipeRange();
             if (leftRange != 1.0f && newLeft < (-mHorizontalDragRange * leftRange * 0.75f)) {
-                Log.i(LOG_TAG, "Threshold left passed");
                 mHasPassedLeftThreshold = true;
                 mHasPassedRightThreshold = false;
             }
