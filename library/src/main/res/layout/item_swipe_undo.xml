@@ -13,17 +13,28 @@
      limitations under the License.
 -->
 
-<com.tr4android.recyclerviewslideitem.SwipeItem xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
-    <include
-        layout="@layout/item_swipe_info"
+    <TextView
+        android:id="@+id/undoDescription"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|start"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:text=""
+        android:textSize="16sp" />
 
-    <include
-        layout="@layout/item_swipe_undo"
+    <Button
+        android:id="@+id/undoButton"
+        style="@style/UndoButtonStyle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</com.tr4android.recyclerviewslideitem.SwipeItem>
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:gravity="center_vertical"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:text="@string/action_undo" />
+</FrameLayout>
