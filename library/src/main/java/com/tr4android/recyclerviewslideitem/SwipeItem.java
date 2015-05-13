@@ -41,9 +41,14 @@ public class SwipeItem extends ViewGroup {
 
     private int mHorizontalDragRange;
 
+    // custom view that slides
     private View mSwipeItem;
 
+    // included background view for slide hint
     private View mSwipeInfo;
+
+    // included background view for slide undo
+    private View mSwipeUndo;
 
     private SwipeConfiguration mConfiguration;
 
@@ -129,15 +134,36 @@ public class SwipeItem extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // measure child
-        mSwipeInfo = getChildAt(0);
-        mSwipeItem = getChildAt(1);
+        // measure childs
+        if (mFirstLayout) {
+            mSwipeInfo = getChildAt(0);
+            mSwipeUndo = getChildAt(1);
+            mSwipeItem = getChildAt(2);
+            switch (mState) {
+                case LEFT_UNDO:
+                    mSwipeInfo.setVisibility(GONE);
+                    mSwipeUndo.setVisibility(VISIBLE);
+                    break;
+                case RIGHT_UNDO:
+                    mSwipeInfo.setVisibility(GONE);
+                    mSwipeUndo.setVisibility(VISIBLE);
+                    break;
+                case NORMAL:
+                    mSwipeUndo.setVisibility(GONE);
+                    mSwipeInfo.setVisibility(VISIBLE);
+            }
+            mSwipeInfo.destroyDrawingCache();
+            mSwipeUndo.destroyDrawingCache();
+        }
+
         measureChildWithMargins(mSwipeInfo, widthMeasureSpec, 0, heightMeasureSpec, 0);
+        measureChildWithMargins(mSwipeUndo, widthMeasureSpec, 0, heightMeasureSpec, 0);
         measureChildWithMargins(mSwipeItem, widthMeasureSpec, 0, heightMeasureSpec, 0);
 
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), mSwipeItem.getMeasuredHeight());
 
         mSwipeInfo.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
+        mSwipeUndo.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
         mSwipeItem.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
     }
 
@@ -148,6 +174,7 @@ public class SwipeItem extends ViewGroup {
         final int parentTop = getPaddingTop();
 
         if (mFirstLayout) {
+            // restore state
             int childLeft = parentLeft;
             int childRight = parentRight;
             switch (mState) {
@@ -165,7 +192,10 @@ public class SwipeItem extends ViewGroup {
             mFirstLayout = false;
         }
 
-        mSwipeInfo.layout(parentLeft, parentTop, parentRight, parentTop + mSwipeItem.getMeasuredHeight());
+        if (mSwipeInfo.getVisibility() != GONE)
+            mSwipeInfo.layout(parentLeft, parentTop, parentRight, parentTop + mSwipeItem.getMeasuredHeight());
+        if (mSwipeUndo.getVisibility() != GONE)
+            mSwipeUndo.layout(parentLeft, parentTop, parentRight, parentTop + mSwipeItem.getMeasuredHeight());
     }
 
     @Override
@@ -178,13 +208,13 @@ public class SwipeItem extends ViewGroup {
         mDragHelper.processTouchEvent(ev);
         // handle parent scroll behaviour
         if (Math.abs(mSwipeItem.getLeft()) > mTouchSlop) {
-                // disable parent scrolling
-                ViewParent parent = getParent();
-                if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
-        } else if (MotionEventCompat.getActionMasked(ev) == MotionEvent.ACTION_UP || MotionEventCompat.getActionMasked(ev) == MotionEvent.ACTION_CANCEL){
-                // enable parent scrolling
-                ViewParent parent = getParent();
-                if (parent != null) parent.requestDisallowInterceptTouchEvent(false);
+            // disable parent scrolling
+            ViewParent parent = getParent();
+            if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
+        } else if (MotionEventCompat.getActionMasked(ev) == MotionEvent.ACTION_UP || MotionEventCompat.getActionMasked(ev) == MotionEvent.ACTION_CANCEL) {
+            // enable parent scrolling
+            ViewParent parent = getParent();
+            if (parent != null) parent.requestDisallowInterceptTouchEvent(false);
         }
         return true;
     }
@@ -197,7 +227,7 @@ public class SwipeItem extends ViewGroup {
     }
 
     public void setSwipeBackgroundColor(int resolvedColor) {
-        mSwipeInfo.setBackgroundColor(resolvedColor);
+        setBackgroundColor(resolvedColor);
     }
 
     public void setSwipeLeftImageResource(int resId) {
@@ -215,43 +245,35 @@ public class SwipeItem extends ViewGroup {
     }
 
     public void setSwipeUndoDescription(CharSequence description) {
-        ((TextView) mSwipeInfo.findViewById(R.id.undoDescription)).setText(description);
+        ((TextView) mSwipeUndo.findViewById(R.id.undoDescription)).setText(description);
     }
 
     public void setSwipeDescriptionTextColor(int resolvedTextColor) {
         ((TextView) mSwipeInfo.findViewById(R.id.textViewDescription)).setTextColor(resolvedTextColor);
-        ((TextView) mSwipeInfo.findViewById(R.id.undoDescription)).setTextColor(resolvedTextColor);
-        ((TextView) mSwipeInfo.findViewById(R.id.undoButton)).setTextColor(resolvedTextColor);
+        ((TextView) mSwipeUndo.findViewById(R.id.undoDescription)).setTextColor(resolvedTextColor);
+        ((TextView) mSwipeUndo.findViewById(R.id.undoButton)).setTextColor(resolvedTextColor);
     }
 
     public void setSwipeConfiguration(SwipeConfiguration configuration) {
-        mSwipeInfo = getChildAt(0);
         mConfiguration = configuration;
         // TODO: handle configuration here if equal in both directions
     }
 
     protected void setSwipeState(SwipeState state) {
         mState = state;
-        switch (state) {
+        switch (mState) {
             case LEFT_UNDO:
                 setSwipeBackgroundColor(mConfiguration.getLeftBackgroundColor());
                 setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
                 setSwipeDescriptionTextColor(mConfiguration.getLeftDescriptionTextColor());
-                mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
-                mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(INVISIBLE);
-                mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(VISIBLE);
+                mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
                 break;
             case RIGHT_UNDO:
                 setSwipeBackgroundColor(mConfiguration.getRightBackgroundColor());
                 setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
                 setSwipeDescriptionTextColor(mConfiguration.getRightDescriptionTextColor());
-                mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
-                mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(INVISIBLE);
-                mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(VISIBLE);
+                mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
                 break;
-            case NORMAL:
-                mSwipeInfo.findViewById(R.id.undoLayout).setVisibility(INVISIBLE);
-                mSwipeInfo.findViewById(R.id.infoLayout).setVisibility(VISIBLE);
         }
     }
 
@@ -427,7 +449,7 @@ public class SwipeItem extends ViewGroup {
         if (mConfiguration.isLeftUndoable()) {
             setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
             showUndoAction(true);
-            mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
+            mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
             // let swipe adapter handle started swipe with undo action
             dispatchOnSwipeLeftUndoStarted();
         } else {
@@ -439,7 +461,7 @@ public class SwipeItem extends ViewGroup {
         if (mConfiguration.isRightUndoable()) {
             setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
             showUndoAction(true);
-            mSwipeInfo.findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
+            mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
             // let swipe adapter handle started swipe with undo action
             dispatchOnSwipeRightUndoStarted();
         } else {
@@ -454,13 +476,11 @@ public class SwipeItem extends ViewGroup {
     }
 
     private void showUndoAction(final boolean show) {
-        View undoItem = mSwipeInfo.findViewById(R.id.undoLayout);
-        View infoItem = mSwipeInfo.findViewById(R.id.infoLayout);
-        ViewCompat.setAlpha(undoItem, show ? 0 : 1);
-        ViewCompat.setAlpha(infoItem, show ? 1 : 0);
-        if (show) undoItem.setVisibility(VISIBLE);
-        if (!show) infoItem.setVisibility(VISIBLE);
-        final ViewPropertyAnimatorCompat undoAnimation = ViewCompat.animate(undoItem);
+        ViewCompat.setAlpha(mSwipeUndo, show ? 0 : 1);
+        ViewCompat.setAlpha(mSwipeInfo, show ? 1 : 0);
+        if (show) mSwipeUndo.setVisibility(VISIBLE);
+        if (!show) mSwipeInfo.setVisibility(VISIBLE);
+        final ViewPropertyAnimatorCompat undoAnimation = ViewCompat.animate(mSwipeUndo);
         undoAnimation.setDuration(300)
                 .alpha(show ? 1 : 0).setListener(new ViewPropertyAnimatorListener() {
             @Override
@@ -471,14 +491,14 @@ public class SwipeItem extends ViewGroup {
             public void onAnimationEnd(View view) {
                 undoAnimation.setListener(null);
                 ViewCompat.setAlpha(view, show ? 1 : 0);
-                if (!show) view.setVisibility(INVISIBLE);
+                if (!show) view.setVisibility(GONE);
             }
 
             @Override
             public void onAnimationCancel(View view) {
             }
         }).start();
-        final ViewPropertyAnimatorCompat infoAnimation = ViewCompat.animate(infoItem);
+        final ViewPropertyAnimatorCompat infoAnimation = ViewCompat.animate(mSwipeInfo);
         infoAnimation.setDuration(300)
                 .alpha(show ? 0 : 1).setListener(new ViewPropertyAnimatorListener() {
             @Override
@@ -489,7 +509,7 @@ public class SwipeItem extends ViewGroup {
             public void onAnimationEnd(View view) {
                 infoAnimation.setListener(null);
                 ViewCompat.setAlpha(view, show ? 0 : 1);
-                if (show) view.setVisibility(INVISIBLE);
+                if (show) view.setVisibility(GONE);
             }
 
             @Override
