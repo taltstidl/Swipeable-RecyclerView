@@ -136,10 +136,10 @@ public class SwipeItem extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // measure childs
+        mSwipeInfo = getChildAt(0);
+        mSwipeUndo = getChildAt(1);
+        mSwipeItem = getChildAt(2);
         if (mFirstLayout) {
-            mSwipeInfo = getChildAt(0);
-            mSwipeUndo = getChildAt(1);
-            mSwipeItem = getChildAt(2);
             switch (mState) {
                 case LEFT_UNDO:
                     mSwipeInfo.setVisibility(GONE);
@@ -232,27 +232,27 @@ public class SwipeItem extends ViewGroup {
     }
 
     public void setSwipeLeftImageResource(int resId) {
-        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewLeft)).setImageResource(0);
-        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewRight)).setImageResource(resId);
+        ((ImageView) findViewById(R.id.imageViewLeft)).setImageResource(0);
+        ((ImageView) findViewById(R.id.imageViewRight)).setImageResource(resId);
     }
 
     public void setSwipeRightImageResource(int resId) {
-        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewLeft)).setImageResource(resId);
-        ((ImageView) mSwipeInfo.findViewById(R.id.imageViewRight)).setImageResource(0);
+        ((ImageView) findViewById(R.id.imageViewLeft)).setImageResource(resId);
+        ((ImageView) findViewById(R.id.imageViewRight)).setImageResource(0);
     }
 
     public void setSwipeDescription(CharSequence description) {
-        ((TextView) mSwipeInfo.findViewById(R.id.textViewDescription)).setText(description);
+        ((TextView) findViewById(R.id.textViewDescription)).setText(description);
     }
 
     public void setSwipeUndoDescription(CharSequence description) {
-        ((TextView) mSwipeUndo.findViewById(R.id.undoDescription)).setText(description);
+        ((TextView) findViewById(R.id.undoDescription)).setText(description);
     }
 
     public void setSwipeDescriptionTextColor(int resolvedTextColor) {
-        ((TextView) mSwipeInfo.findViewById(R.id.textViewDescription)).setTextColor(resolvedTextColor);
-        ((TextView) mSwipeUndo.findViewById(R.id.undoDescription)).setTextColor(resolvedTextColor);
-        ((TextView) mSwipeUndo.findViewById(R.id.undoButton)).setTextColor(resolvedTextColor);
+        ((TextView) findViewById(R.id.textViewDescription)).setTextColor(resolvedTextColor);
+        ((TextView) findViewById(R.id.undoDescription)).setTextColor(resolvedTextColor);
+        ((TextView) findViewById(R.id.undoButton)).setTextColor(resolvedTextColor);
     }
 
     public void setSwipeConfiguration(SwipeConfiguration configuration) {
@@ -267,13 +267,13 @@ public class SwipeItem extends ViewGroup {
                 setSwipeBackgroundColor(mConfiguration.getLeftBackgroundColor());
                 setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
                 setSwipeDescriptionTextColor(mConfiguration.getLeftDescriptionTextColor());
-                mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
+                findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
                 break;
             case RIGHT_UNDO:
                 setSwipeBackgroundColor(mConfiguration.getRightBackgroundColor());
                 setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
                 setSwipeDescriptionTextColor(mConfiguration.getRightDescriptionTextColor());
-                mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
+                findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
                 break;
         }
     }

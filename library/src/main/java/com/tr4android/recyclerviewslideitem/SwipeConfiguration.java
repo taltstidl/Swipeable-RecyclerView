@@ -221,6 +221,7 @@ public class SwipeConfiguration {
         // default SwipeBehaviour values
         public static final SwipeBehaviour NORMAL_SWIPE = new SwipeBehaviour(1.0f, LINEAR_INTERPOLATOR);
         public static final SwipeBehaviour RESTRICTED_SWIPE = new SwipeBehaviour(0.25f, DECELERATE_INTERPOLATOR);
+        public static final SwipeBehaviour NO_SWIPE = new SwipeBehaviour(0.0f, LINEAR_INTERPOLATOR);
 
         public float range;
         public Interpolator interpolator;
