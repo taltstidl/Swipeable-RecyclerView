@@ -17,6 +17,7 @@
 package com.tr4android.recyclerviewslideitem;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
@@ -152,8 +153,8 @@ public class SwipeItem extends ViewGroup {
                     mSwipeUndo.setVisibility(GONE);
                     mSwipeInfo.setVisibility(VISIBLE);
             }
-            mSwipeInfo.destroyDrawingCache();
-            mSwipeUndo.destroyDrawingCache();
+            ViewCompat.setAlpha(mSwipeInfo, 1);
+            ViewCompat.setAlpha(mSwipeUndo, 1);
         }
 
         measureChildWithMargins(mSwipeInfo, widthMeasureSpec, 0, heightMeasureSpec, 0);
@@ -447,6 +448,7 @@ public class SwipeItem extends ViewGroup {
 
     private void handleLeftSwipe() {
         if (mConfiguration.isLeftUndoable()) {
+            mState = SwipeState.LEFT_UNDO;
             setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
             showUndoAction(true);
             mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
@@ -459,6 +461,7 @@ public class SwipeItem extends ViewGroup {
 
     private void handleRightSwipe() {
         if (mConfiguration.isRightUndoable()) {
+            mState = SwipeState.RIGHT_UNDO;
             setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
             showUndoAction(true);
             mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
