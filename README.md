@@ -22,6 +22,8 @@ dependencies {
 
 ### Code Setup
 
+For a full example check out the implementation of the [SampleAdapter](https://github.com/TR4Android/Swipeable-RecyclerView/blob/master/sample/src/main/java/com/tr4android/recyclerviewslideitemsample/SampleAdapter.java) in the sample folder of this repository.
+
 To be able to use the swipe to dismiss pattern in your RecyclerView you'll have to extend the `SwipeAdapter` in your Adapter class. After that there are only a few minor changes you have to do to get everything going:
 
 ##### Migrating from normal adapter
@@ -48,7 +50,9 @@ public class SampleAdapter extends SwipeAdapter {
 ```
 
 ##### Special setup for swipeable adapter
-There are some new methods related to the swiping pattern in the `SwipeAdapter` that you'll have to override. Those are:
+To properly setup the tracking of undos based on the item count you'll have to call the `initialize()` method after retrieving and setting your data.
+
+There also are some new methods related to the swiping pattern in the `SwipeAdapter` that you'll have to override. Those are:
 
 * `onCreateSwipeConfiguration(Context context, int position)`: This is used to determine the configuration of a particular list item and allows flexible control on a per item basis. You'll have to return a `SwipeConfiguration` using the built in `Builder` class. More customization options can be found in the SwipeConfiguration section below.
 * `onSwipe(int position, int direction)`: This gets called whenever an item is removed using a swipe. Be sure to call `notifyItemRemoved(position)` there after changing your data to properly allow removal using the default ItemAnimator of the RecyclerView. `int direction` is one of either `SWIPE_LEFT` or `SWIPE_RIGHT` indicating the direction in which the user has dismissed the item.
@@ -56,6 +60,11 @@ There are some new methods related to the swiping pattern in the `SwipeAdapter` 
 An implementation might look like this:
 ``` java
 public class SampleAdapter extends SwipeAdapter {
+    ...
+    public SampleAdapter() {
+        // retrieve your data
+        initialize();
+    }
     ...
     @Override
     public SwipeConfiguration onCreateSwipeConfiguration(Context context, int position) {
@@ -88,7 +97,7 @@ You can easily customize the actions when swiping by using the `SwipeConfigurati
 * `setUndoDescription(CharSequence description)`: The text shown when the user has dismissed the item and is shown the option to undo the dismissal.
 * `setUndoDescriptionResource(int resId)`: The resource id of the text shown when the user has dismissed the item and is shown the option to undo the dismissal.
 * `setUndoable(boolean undoable)`: Whether the action is undoable. If set to `true` the user will have the option to undo the action for 5 seconds, if set to `false` the item will be dismissed immediately.
-* `setSwipeBehaviour(SwipeBehavior swipeBehavior)`: The behaviour of the item when swiping. Takes one of the provided default behaviours `NORMAL_SWIPE` or `RESTRICTED_SWIPE`.
+* `setSwipeBehaviour(SwipeBehavior swipeBehavior)`: The behaviour of the item when swiping. Takes one of the provided default behaviours `NORMAL_SWIPE`, `RESTRICTED_SWIPE` or `NO_SWIPE`.
 * `setSwipeBehaviour(float range, Interpolator interpolator)`: The more customized behaviour of the item when swiping, where `range` indicates how far the item can be swiped (percentage of item width) and `interpolator` is the custom Interpolator used when calculating the item position while swiping.
 * `setCallbackEnabled(boolean enabled)`: Whether the swipe callback should be triggered on this action. If set to `true` you will receive a swipe action through `onSwipe(int position, int direction)`, if set to `false` you won't.
 
