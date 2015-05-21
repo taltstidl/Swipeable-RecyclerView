@@ -17,14 +17,12 @@
 package com.tr4android.recyclerviewslideitem;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -34,7 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SwipeItem extends ViewGroup {
-    private static final String LOG_TAG = "SwipeItem";
+    //private static final String LOG_TAG = "SwipeItem";
 
     private final ViewDragHelper mDragHelper;
 

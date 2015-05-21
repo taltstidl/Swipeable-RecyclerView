@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2015 Thomas Robert Altstidl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.tr4android.recyclerviewslideitemsample;
 
 import android.content.Context;
@@ -15,9 +31,6 @@ import com.tr4android.recyclerviewslideitem.SwipeConfiguration;
 
 import java.util.ArrayList;
 
-/**
- * Copyright (c) 2015 TR4Android
- */
 public class SampleAdapter extends SwipeAdapter {
     ArrayList<String> mDataset;
     int[] colors = new int[]{R.color.color_red, R.color.color_pink, R.color.color_purple, R.color.color_deep_purple, R.color.color_indigo, R.color.color_blue, R.color.color_light_blue, R.color.color_cyan, R.color.color_teal, R.color.color_green, R.color.color_light_green, R.color.color_lime, R.color.color_yellow, R.color.color_amber, R.color.color_orange, R.color.color_deep_orange, R.color.color_brown, R.color.color_grey, R.color.color_blue_grey};
@@ -31,7 +44,6 @@ public class SampleAdapter extends SwipeAdapter {
         for (int i = 0; i < 25; i++) {
             mDataset.add("person" + String.valueOf(i + 1) + "@sample.com");
         }
-        initialize();
     }
 
     public class SampleViewHolder extends RecyclerView.ViewHolder {

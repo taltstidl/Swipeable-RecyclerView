@@ -19,7 +19,6 @@ package com.tr4android.recyclerviewslideitem;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -30,19 +29,8 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public static final int SWIPE_RIGHT = 1;
     public static final int TIME_POST_DELAYED = 5000; // in ms
 
-    private int mRunnablePosition = RecyclerView.NO_POSITION;
-    private int mRunnableDirection;
-    private Runnable mRunnable;
     private Handler mHandler = new Handler();
-
-    private ArrayList<SwipeRunnable> mRunnables = new ArrayList<>();
-
-    public void initialize() {
-        int count = getItemCount();
-        for (int i = 0; i < count; i++) {
-            mRunnables.add(null);
-        }
-    }
+    private ArrayList<SwipeRunnable> mRunnables;
 
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -75,12 +63,15 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     SwipeRunnable runnable = new SwipeRunnable(SWIPE_LEFT) {
                         @Override
                         public void run() {
-                            int pos = findPosition(this);
-                            onSwipe(pos, SWIPE_LEFT);
+                            synchronized (mRunnables) {
+                                onSwipe(mRunnables.indexOf(this), SWIPE_LEFT);
+                            }
                         }
                     };
-                    mRunnables.set(position, runnable);
-                    mHandler.postDelayed(runnable, TIME_POST_DELAYED);
+                    synchronized (mRunnables) {
+                        mRunnables.set(position, runnable);
+                        mHandler.postDelayed(runnable, TIME_POST_DELAYED);
+                    }
                 }
             }
 
@@ -91,12 +82,15 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     SwipeRunnable runnable = new SwipeRunnable(SWIPE_RIGHT) {
                         @Override
                         public void run() {
-                            int pos = findPosition(this);
-                            onSwipe(pos, SWIPE_RIGHT);
+                            synchronized (mRunnables) {
+                                onSwipe(mRunnables.indexOf(this), SWIPE_RIGHT);
+                            }
                         }
                     };
-                    mRunnables.set(position, runnable);
-                    mHandler.postDelayed(runnable, TIME_POST_DELAYED);
+                    synchronized (mRunnables) {
+                        mRunnables.set(position, runnable);
+                        mHandler.postDelayed(runnable, TIME_POST_DELAYED);
+                    }
                 }
             }
 
@@ -104,8 +98,10 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             public void onSwipeLeftUndoClicked() {
                 final int position = swipeHolder.getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    Runnable runnable = mRunnables.set(position, null);
-                    mHandler.removeCallbacks(runnable);
+                    synchronized (mRunnables) {
+                        Runnable runnable = mRunnables.set(position, null);
+                        mHandler.removeCallbacks(runnable);
+                    }
                 }
             }
 
@@ -113,8 +109,10 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             public void onSwipeRightUndoClicked() {
                 final int position = swipeHolder.getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    Runnable runnable = mRunnables.set(position, null);
-                    mHandler.removeCallbacks(runnable);
+                    synchronized (mRunnables) {
+                        Runnable runnable = mRunnables.set(position, null);
+                        mHandler.removeCallbacks(runnable);
+                    }
                 }
             }
         });
@@ -128,10 +126,16 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         onBindSwipeViewHolder(holder, position);
     }
 
-    private int findPosition(Runnable r) {
-        int position = mRunnables.indexOf(r);
-        mRunnables.remove(position);
-        return position;
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        if (mRunnables == null) {
+            mRunnables = new ArrayList<>();
+            int count = getItemCount();
+            for (int i = 0; i < count; i++) {
+                mRunnables.add(null);
+            }
+        }
+        registerAdapterDataObserver(new SwipeAdapterDataObserver());
     }
 
     public abstract RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int viewType);
@@ -144,4 +148,58 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public abstract SwipeConfiguration onCreateSwipeConfiguration(Context context, int position);
 
     public abstract void onSwipe(int position, int direction);
+
+    private class SwipeAdapterDataObserver extends RecyclerView.AdapterDataObserver {
+        public void onChanged() {
+            synchronized (mRunnables) {
+                int size = mRunnables.size();
+                int itemCount = getItemCount();
+                if (itemCount > size) {
+                    onItemRangeChanged(0, size);
+                    onItemRangeInserted(size, itemCount - size);
+                } else {
+                    onItemRangeChanged(0, itemCount);
+                    onItemRangeRemoved(itemCount, size - itemCount);
+                }
+            }
+        }
+
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            synchronized (mRunnables) {
+                for (int i = 0; i < itemCount; i++) {
+                    Runnable r = mRunnables.set(positionStart + i, null);
+                    if (r != null) {
+                        mHandler.removeCallbacks(r);
+                    }
+                }
+            }
+        }
+
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            synchronized (mRunnables) {
+                for (int i = 0; i < itemCount; i++) {
+                    mRunnables.add(positionStart, null);
+                }
+            }
+        }
+
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            synchronized (mRunnables) {
+                for (int i = 0; i < itemCount; i++) {
+                    mRunnables.set(toPosition + i, mRunnables.remove(fromPosition));
+                }
+            }
+        }
+
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            synchronized (mRunnables) {
+                for (int i = 0; i < itemCount; i++) {
+                    Runnable r = mRunnables.remove(positionStart);
+                    if (r != null) {
+                        mHandler.removeCallbacks(r);
+                    }
+                }
+            }
+        }
+    }
 }
