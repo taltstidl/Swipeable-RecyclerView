@@ -1,5 +1,7 @@
+[![Release](https://img.shields.io/badge/Maven Central-0.1.0-brightgreen.svg?style=flat)](https://jitpack.io/#TR4Android/Swipeable-RecyclerView) [![API](https://img.shields.io/badge/API-7%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=7)
+
 # Swipeable-RecyclerView
-A library that provides an easy and customizable way to implement a swipe to dismiss pattern with RecyclerView.
+A library that provides an easy and customizable way to implement a swipe to dismiss pattern with RecyclerView and works back to API level 7.
 
 **Note:** This library is currently in active development and might thus not be suitable for production versions as of yet. If you are comfortable experimenting with this library though feel free to give it a spin and report any issues you find. A list of issues currently on the roadmap can be found [here](https://github.com/TR4Android/Swipeable-RecyclerView/issues).
 
@@ -80,6 +82,10 @@ public class SampleAdapter extends SwipeAdapter {
     ...
 }
 ```
+
+##### Special setup for item layout
+
+There's practically no setup needed for the layout itself, but you'll probably want to add a background to the root of your item. If you just want to use the window background add `android:background="?android:attr/windowBackground"`.
 
 ### Customization
 
