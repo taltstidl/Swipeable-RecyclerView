@@ -30,7 +30,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public static final int TIME_POST_DELAYED = 5000; // in ms
 
     private Handler mHandler = new Handler();
-    private ArrayList<SwipeRunnable> mRunnables;
+    private final ArrayList<SwipeRunnable> mRunnables = new ArrayList<>();
 
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -128,8 +128,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        if (mRunnables == null) {
-            mRunnables = new ArrayList<>();
+        if (mRunnables.size() == 0) {
             int count = getItemCount();
             for (int i = 0; i < count; i++) {
                 mRunnables.add(null);
@@ -189,7 +188,8 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
             synchronized (mRunnables) {
                 for (int i = 0; i < itemCount; i++) {
-                    mRunnables.set(toPosition + i, mRunnables.remove(fromPosition));
+                    int c = fromPosition > toPosition ? i : 0;
+                    mRunnables.set(toPosition + c, mRunnables.remove(fromPosition + c));
                 }
             }
         }
