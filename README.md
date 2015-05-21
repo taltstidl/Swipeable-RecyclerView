@@ -50,7 +50,6 @@ public class SampleAdapter extends SwipeAdapter {
 ```
 
 ##### Special setup for swipeable adapter
-To properly setup the tracking of undos based on the item count you'll have to call the `initialize()` method after retrieving and setting your data.
 
 There also are some new methods related to the swiping pattern in the `SwipeAdapter` that you'll have to override. Those are:
 
@@ -63,7 +62,6 @@ public class SampleAdapter extends SwipeAdapter {
     ...
     public SampleAdapter() {
         // retrieve your data
-        initialize();
     }
     ...
     @Override
