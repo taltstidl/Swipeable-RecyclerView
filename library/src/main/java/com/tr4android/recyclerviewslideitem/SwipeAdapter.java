@@ -149,6 +149,9 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public abstract void onSwipe(int position, int direction);
 
+    /**
+     * Observer for synchronized updating of undo runnables
+     */
     private class SwipeAdapterDataObserver extends RecyclerView.AdapterDataObserver {
         public void onChanged() {
             synchronized (mRunnables) {

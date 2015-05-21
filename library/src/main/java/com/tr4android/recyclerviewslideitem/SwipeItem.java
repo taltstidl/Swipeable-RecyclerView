@@ -74,6 +74,7 @@ public class SwipeItem extends ViewGroup {
             showUndoAction(false);
             mSwipeInfo.setOnClickListener(null);
             swipeBack();
+            mState = SwipeState.NORMAL;
             // let swipe adapter handle canceled swipe
             dispatchOnSwipeLeftUndoClicked();
         }
@@ -85,6 +86,7 @@ public class SwipeItem extends ViewGroup {
             showUndoAction(false);
             mSwipeInfo.setOnClickListener(null);
             swipeBack();
+            mState = SwipeState.NORMAL;
             // let swipe adapter handle canceled swipe
             dispatchOnSwipeRightUndoClicked();
         }
