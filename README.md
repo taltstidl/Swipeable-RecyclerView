@@ -1,11 +1,11 @@
-[![Release](https://img.shields.io/badge/Maven Central-0.1.0-brightgreen.svg?style=flat)](https://jitpack.io/#TR4Android/Swipeable-RecyclerView) [![API](https://img.shields.io/badge/API-7%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=7)
+[![Release](https://img.shields.io/github/release/TR4Android/Swipeable-RecyclerView.svg?label=JitPack%20Maven)](https://jitpack.io/#TR4Android/Swipeable-RecyclerView) [![API](https://img.shields.io/badge/API-7%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=7) [![License](https://img.shields.io/badge/license-Apache 2.0-brightgreen.svg?style=flat)](https://github.com/TR4Android/Swipeable-RecyclerView/blob/master/LICENSE.md)
 
 # Swipeable-RecyclerView
 A library that provides an easy and customizable way to implement a swipe to dismiss pattern with RecyclerView and works back to API level 7.
 
 **Note:** This library is currently in active development and might thus not be suitable for production versions as of yet. If you are comfortable experimenting with this library though feel free to give it a spin and report any issues you find. A list of issues currently on the roadmap can be found [here](https://github.com/TR4Android/Swipeable-RecyclerView/issues).
 
-Here's how the demo application looks and behaves (you can download a debug apk of the demo [here](https://github.com/TR4Android/Swipeable-RecyclerView/releases/download/0.1.0/sample-debug.apk)):
+Here's how the demo application looks and behaves (you can download a debug apk of the demo [here](https://github.com/TR4Android/Swipeable-RecyclerView/releases/download/0.2.0/sample-debug.apk)):
 
 ![Demo GIF](https://raw.githubusercontent.com/TR4Android/Swipeable-RecyclerView/master/art/demo.gif)
 
@@ -18,7 +18,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    compile 'com.github.TR4Android:Swipeable-RecyclerView:0.1.0'
+    compile 'com.github.TR4Android:Swipeable-RecyclerView:0.2.0'
 }
 ```
 
