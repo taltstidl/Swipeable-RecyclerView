@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.tr4android.recyclerviewslideitem.SwipeAdapter;
 import com.tr4android.recyclerviewslideitem.SwipeConfiguration;
+import com.tr4android.recyclerviewslideitem.SwipeViewHolder;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class SampleAdapter extends SwipeAdapter {
         }
     }
 
-    public class SampleViewHolder extends RecyclerView.ViewHolder {
+    public class SampleViewHolder extends SwipeViewHolder {
         View avatarView;
         TextView textView;
 
@@ -58,7 +59,7 @@ public class SampleAdapter extends SwipeAdapter {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateSwipeViewHolder(ViewGroup parent, int i) {
+    public SwipeViewHolder onCreateSwipeViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_sample, parent, true);
         return new SampleViewHolder(v);
@@ -89,7 +90,8 @@ public class SampleAdapter extends SwipeAdapter {
     }
 
     @Override
-    public void onSwipe(int position, int direction) {
+    public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction) {
+        int position = viewHolder.getAdapterPosition();
         if (direction == SWIPE_LEFT) {
             mDataset.remove(position);
             notifyItemRemoved(position);
