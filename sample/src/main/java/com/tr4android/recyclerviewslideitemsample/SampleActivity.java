@@ -38,7 +38,7 @@ public class SampleActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        recyclerView.setAdapter(new SampleAdapter(this));
+        recyclerView.setAdapter(new SampleAdapter(this, recyclerView));
     }
 
 

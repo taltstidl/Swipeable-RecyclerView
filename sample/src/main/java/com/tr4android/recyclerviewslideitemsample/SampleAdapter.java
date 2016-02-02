@@ -23,6 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,14 +32,16 @@ import com.tr4android.recyclerviewslideitem.SwipeConfiguration;
 
 import java.util.ArrayList;
 
-public class SampleAdapter extends SwipeAdapter {
+public class SampleAdapter extends SwipeAdapter implements View.OnClickListener {
     ArrayList<String> mDataset;
     int[] colors = new int[]{R.color.color_red, R.color.color_pink, R.color.color_purple, R.color.color_deep_purple, R.color.color_indigo, R.color.color_blue, R.color.color_light_blue, R.color.color_cyan, R.color.color_teal, R.color.color_green, R.color.color_light_green, R.color.color_lime, R.color.color_yellow, R.color.color_amber, R.color.color_orange, R.color.color_deep_orange, R.color.color_brown, R.color.color_grey, R.color.color_blue_grey};
 
     private Context mContext;
+    private RecyclerView mRecyclerView;
 
-    public SampleAdapter(Context context) {
+    public SampleAdapter(Context context, RecyclerView recyclerView) {
         mContext = context;
+        mRecyclerView = recyclerView;
         // create dummy dataset
         mDataset = new ArrayList<>();
         for (int i = 0; i < 25; i++) {
@@ -47,13 +50,16 @@ public class SampleAdapter extends SwipeAdapter {
     }
 
     public class SampleViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout contentView;
         View avatarView;
         TextView textView;
 
         public SampleViewHolder(View view) {
             super(view);
+            contentView = (LinearLayout) view.findViewById(R.id.contentView);
             avatarView = view.findViewById(R.id.avatarView);
             textView = (TextView) view.findViewById(R.id.textView);
+            contentView.setOnClickListener(SampleAdapter.this);
         }
     }
 
@@ -99,6 +105,14 @@ public class SampleAdapter extends SwipeAdapter {
             Toast toast = Toast.makeText(mContext, "Marked item as read at position " + position, Toast.LENGTH_SHORT);
             toast.show();
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        // We need to get the parent of the parent to actually have the proper view
+        int position = mRecyclerView.getChildAdapterPosition((View) view.getParent().getParent());
+        Toast toast = Toast.makeText(mContext, "Clicked item at position " + position, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     @Override
