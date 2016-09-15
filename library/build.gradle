@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'android-maven'
+//apply plugin: 'android-maven'
 
 android {
     compileSdkVersion 23

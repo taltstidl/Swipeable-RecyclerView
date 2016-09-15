@@ -40,7 +40,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Override
-    public final void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public final void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final RecyclerView.ViewHolder swipeHolder = holder;
         final SwipeItem swipeItem = (SwipeItem) swipeHolder.itemView;
         SwipeConfiguration configuration = onCreateSwipeConfiguration(swipeItem.getContext(), position);
@@ -48,12 +48,12 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         swipeItem.setSwipeListener(new SwipeItem.OnSwipeListener() {
             @Override
             public void onSwipeLeft() {
-                onSwipe(swipeHolder.getAdapterPosition(), SWIPE_LEFT);
+                onSwipe(swipeHolder.getAdapterPosition(), SWIPE_LEFT, holder);
             }
 
             @Override
             public void onSwipeRight() {
-                onSwipe(swipeHolder.getAdapterPosition(), SWIPE_RIGHT);
+                onSwipe(swipeHolder.getAdapterPosition(), SWIPE_RIGHT, holder);
             }
 
             @Override
@@ -64,7 +64,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         @Override
                         public void run() {
                             synchronized (mRunnables) {
-                                onSwipe(mRunnables.indexOf(this), SWIPE_LEFT);
+                                onSwipe(mRunnables.indexOf(this), SWIPE_LEFT, holder);
                             }
                         }
                     };
@@ -83,7 +83,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         @Override
                         public void run() {
                             synchronized (mRunnables) {
-                                onSwipe(mRunnables.indexOf(this), SWIPE_RIGHT);
+                                onSwipe(mRunnables.indexOf(this), SWIPE_RIGHT, holder);
                             }
                         }
                     };
@@ -146,7 +146,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public abstract SwipeConfiguration onCreateSwipeConfiguration(Context context, int position);
 
-    public abstract void onSwipe(int position, int direction);
+    public abstract void onSwipe(int position, int direction, RecyclerView.ViewHolder holder);
 
     /**
      * Observer for synchronized updating of undo runnables
