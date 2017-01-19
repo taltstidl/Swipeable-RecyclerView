@@ -272,7 +272,6 @@ public class SwipeItem extends ViewGroup {
             case LEFT_UNDO:
                 setSwipeBackgroundColor(mConfiguration.getLeftBackgroundColor());
                 setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
-                setSwipeUndoText(mConfiguration.getLeftUndoButtonText());
                 setSwipeDescriptionTextColor(mConfiguration.getLeftDescriptionTextColor());
                 findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
                 break;
@@ -280,7 +279,6 @@ public class SwipeItem extends ViewGroup {
                 setSwipeBackgroundColor(mConfiguration.getRightBackgroundColor());
                 setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
                 setSwipeDescriptionTextColor(mConfiguration.getRightDescriptionTextColor());
-                setSwipeUndoText(mConfiguration.getRightUndoButtonText());
                 findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
                 break;
         }
@@ -460,6 +458,7 @@ public class SwipeItem extends ViewGroup {
             mState = SwipeState.LEFT_UNDO;
             setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
             showUndoAction(true);
+            setSwipeUndoText(mConfiguration.getLeftUndoButtonText());
             mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
             // let swipe adapter handle started swipe with undo action
             dispatchOnSwipeLeftUndoStarted();
@@ -473,6 +472,7 @@ public class SwipeItem extends ViewGroup {
             mState = SwipeState.RIGHT_UNDO;
             setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
             showUndoAction(true);
+            setSwipeUndoText(mConfiguration.getRightUndoButtonText());
             mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
             // let swipe adapter handle started swipe with undo action
             dispatchOnSwipeRightUndoStarted();
