@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -249,6 +250,11 @@ public class SwipeItem extends ViewGroup {
         ((TextView) findViewById(R.id.undoDescription)).setText(description);
     }
 
+    private void setSwipeUndoText(CharSequence undoButtonText) {
+        ((Button) findViewById(R.id.undoButton)).setText(undoButtonText);
+    }
+
+
     public void setSwipeDescriptionTextColor(int resolvedTextColor) {
         ((TextView) findViewById(R.id.textViewDescription)).setTextColor(resolvedTextColor);
         ((TextView) findViewById(R.id.undoDescription)).setTextColor(resolvedTextColor);
@@ -266,6 +272,7 @@ public class SwipeItem extends ViewGroup {
             case LEFT_UNDO:
                 setSwipeBackgroundColor(mConfiguration.getLeftBackgroundColor());
                 setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
+                setSwipeUndoText(mConfiguration.getLeftUndoButtonText());
                 setSwipeDescriptionTextColor(mConfiguration.getLeftDescriptionTextColor());
                 findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
                 break;
@@ -273,10 +280,12 @@ public class SwipeItem extends ViewGroup {
                 setSwipeBackgroundColor(mConfiguration.getRightBackgroundColor());
                 setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
                 setSwipeDescriptionTextColor(mConfiguration.getRightDescriptionTextColor());
+                setSwipeUndoText(mConfiguration.getRightUndoButtonText());
                 findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
                 break;
         }
     }
+
 
     public void setSwipeListener(OnSwipeListener listener) {
         mOnSwipeListener = listener;
