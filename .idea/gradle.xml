@@ -9,11 +9,12 @@
         <option name="gradleJvm" value="1.7" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/library" />
-            <option value="$PROJECT_DIR$/sample" />
+            <option value="/Volumes/Transcend/Projects/libs/Swipeable-RecyclerView" />
+            <option value="/Volumes/Transcend/Projects/libs/Swipeable-RecyclerView/library" />
+            <option value="/Volumes/Transcend/Projects/libs/Swipeable-RecyclerView/sample" />
           </set>
         </option>
+        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

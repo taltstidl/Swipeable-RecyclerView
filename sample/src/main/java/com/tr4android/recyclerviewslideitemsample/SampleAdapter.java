@@ -91,6 +91,7 @@ public class SampleAdapter extends SwipeAdapter implements View.OnClickListener 
                 .setDescriptionTextColorResource(android.R.color.white)
                 .setLeftSwipeBehaviour(SwipeConfiguration.SwipeBehaviour.NORMAL_SWIPE)
                 .setRightSwipeBehaviour(SwipeConfiguration.SwipeBehaviour.RESTRICTED_SWIPE)
+                .setLeftUndoDuration(1000)
                 .build();
     }
 

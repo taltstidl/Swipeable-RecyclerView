@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Swipeable-RecyclerView.iml" filepath="$PROJECT_DIR$/Swipeable-RecyclerView.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
+      <module fileurl="file:///Volumes/Transcend/Projects/libs/Swipeable-RecyclerView/Swipeable-RecyclerView.iml" filepath="/Volumes/Transcend/Projects/libs/Swipeable-RecyclerView/Swipeable-RecyclerView.iml" />
+      <module fileurl="file:///Volumes/Transcend/Projects/libs/Swipeable-RecyclerView/library/library.iml" filepath="/Volumes/Transcend/Projects/libs/Swipeable-RecyclerView/library/library.iml" />
+      <module fileurl="file:///Volumes/Transcend/Projects/libs/Swipeable-RecyclerView/sample/sample.iml" filepath="/Volumes/Transcend/Projects/libs/Swipeable-RecyclerView/sample/sample.iml" />
     </modules>
   </component>
 </project>
