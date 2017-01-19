@@ -532,6 +532,12 @@ public class SwipeConfiguration {
             return this;
         }
 
+        public Builder setUndoDuration(long duration) {
+            mLeftUndoDuration = duration;
+            mRightUndoDuration = duration;
+            return this;
+        }
+
         public Builder setLeftUndoDuration(long duration) {
             mLeftUndoDuration = duration;
             return this;
