@@ -1,3 +1,9 @@
+#### :exclamation: IMPORTANT ANNOUNCEMENT: LIBRARY NOT MAINTAINED :exclamation:
+
+This library is no longer actively maintained, the last commit on it was on *Feb 2, 2016*. This is mainly due to the official APIs for `RecyclerView` added in versions 24.1.0 which supersede most of the implementations in this library. You can check out the Medium posts by @iPaulPro ([Part 1](https://medium.com/@ipaulpro/drag-and-swipe-with-recyclerview-b9456d2b1aaf) and [Part 2](https://medium.com/@ipaulpro/drag-and-swipe-with-recyclerview-6a6f0c422efd)) for an introduction to those, including some customization options. It is highly recommended to switch to those official APIs, but if you still want to contribute to this project I'll accept pull requests. Happy coding!
+
+---
+
 [![Release](https://img.shields.io/github/release/TR4Android/Swipeable-RecyclerView.svg?label=JitPack%20Maven)](https://jitpack.io/#TR4Android/Swipeable-RecyclerView) [![API](https://img.shields.io/badge/API-7%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=7) [![License](https://img.shields.io/badge/license-Apache 2.0-brightgreen.svg?style=flat)](https://github.com/TR4Android/Swipeable-RecyclerView/blob/master/LICENSE.md)
 
 # Swipeable-RecyclerView
