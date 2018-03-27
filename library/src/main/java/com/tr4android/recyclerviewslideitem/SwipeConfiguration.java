@@ -55,6 +55,9 @@ public class SwipeConfiguration {
     // interpolator used for swipe animation
     private Interpolator mLeftSwipeInterpolator;
     private Interpolator mRightSwipeInterpolator;
+    // Undo duration in ms
+    private long mLeftUndoDuration = 5000;
+    private long mRightUndoDuration = 5000;
 
     int getLeftDrawableResource() {
         return mLeftDrawableResource;
@@ -210,6 +213,23 @@ public class SwipeConfiguration {
         mRightSwipeInterpolator = interpolator;
     }
 
+    public long getLeftUndoDuration() {
+        return mLeftUndoDuration;
+    }
+
+    public void setLeftUndoDuration(long mLeftUndoDuration) {
+        this.mLeftUndoDuration = mLeftUndoDuration;
+    }
+
+    public long getRightUndoDuration() {
+        return mRightUndoDuration;
+    }
+
+    public void setRightUndoDuration(long mRightUndoDuration) {
+        this.mRightUndoDuration = mRightUndoDuration;
+    }
+
+
     /**
      * Class for default swipe behaviour provided by the library
      */
@@ -257,6 +277,8 @@ public class SwipeConfiguration {
         private float mRightSwipeRange;
         private Interpolator mLeftSwipeInterpolator;
         private Interpolator mRightSwipeInterpolator;
+        private long mLeftUndoDuration;
+        private long mRightUndoDuration;
 
         public Builder(Context context) {
             mContext = context;
@@ -510,6 +532,22 @@ public class SwipeConfiguration {
             return this;
         }
 
+        public Builder setUndoDuration(long duration) {
+            mLeftUndoDuration = duration;
+            mRightUndoDuration = duration;
+            return this;
+        }
+
+        public Builder setLeftUndoDuration(long duration) {
+            mLeftUndoDuration = duration;
+            return this;
+        }
+
+        public Builder setRightUndoDuration(long duration) {
+            mRightUndoDuration = duration;
+            return this;
+        }
+
         public SwipeConfiguration build() {
             SwipeConfiguration config = new SwipeConfiguration();
             config.setLeftDrawableResource(mLeftDrawableResource);
@@ -528,6 +566,10 @@ public class SwipeConfiguration {
             config.setRightUndoDescription(mRightUndoDescription);
             config.setLeftUndoButtonText(mLeftUndoButtonText);
             config.setRightUndoButtonText(mRightUndoButtonText);
+            config.setLeftUndoDuration(mLeftUndoDuration);
+            config.setRightUndoDuration(mRightUndoDuration);
+            config.setRightUndoButtonText(mRightUndoButtonText);
+
             if (mLeftSwipeInterpolator == null) {
                 setLeftSwipeBehaviour(SwipeBehaviour.NORMAL_SWIPE);
             }
@@ -539,4 +581,5 @@ public class SwipeConfiguration {
             return config;
         }
     }
+
 }

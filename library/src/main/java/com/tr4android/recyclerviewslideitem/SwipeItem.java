@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -249,6 +250,11 @@ public class SwipeItem extends ViewGroup {
         ((TextView) findViewById(R.id.undoDescription)).setText(description);
     }
 
+    private void setSwipeUndoText(CharSequence undoButtonText) {
+        ((Button) findViewById(R.id.undoButton)).setText(undoButtonText);
+    }
+
+
     public void setSwipeDescriptionTextColor(int resolvedTextColor) {
         ((TextView) findViewById(R.id.textViewDescription)).setTextColor(resolvedTextColor);
         ((TextView) findViewById(R.id.undoDescription)).setTextColor(resolvedTextColor);
@@ -277,6 +283,7 @@ public class SwipeItem extends ViewGroup {
                 break;
         }
     }
+
 
     public void setSwipeListener(OnSwipeListener listener) {
         mOnSwipeListener = listener;
@@ -451,6 +458,7 @@ public class SwipeItem extends ViewGroup {
             mState = SwipeState.LEFT_UNDO;
             setSwipeUndoDescription(mConfiguration.getLeftUndoDescription());
             showUndoAction(true);
+            setSwipeUndoText(mConfiguration.getLeftUndoButtonText());
             mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(leftUndoClickListener);
             // let swipe adapter handle started swipe with undo action
             dispatchOnSwipeLeftUndoStarted();
@@ -464,6 +472,7 @@ public class SwipeItem extends ViewGroup {
             mState = SwipeState.RIGHT_UNDO;
             setSwipeUndoDescription(mConfiguration.getRightUndoDescription());
             showUndoAction(true);
+            setSwipeUndoText(mConfiguration.getRightUndoButtonText());
             mSwipeUndo.findViewById(R.id.undoButton).setOnClickListener(rightUndoClickListener);
             // let swipe adapter handle started swipe with undo action
             dispatchOnSwipeRightUndoStarted();

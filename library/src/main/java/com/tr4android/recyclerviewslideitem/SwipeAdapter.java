@@ -27,10 +27,10 @@ import java.util.ArrayList;
 public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int SWIPE_LEFT = -1;
     public static final int SWIPE_RIGHT = 1;
-    public static final int TIME_POST_DELAYED = 5000; // in ms
 
     private Handler mHandler = new Handler();
     private final ArrayList<SwipeRunnable> mRunnables = new ArrayList<>();
+    private SwipeConfiguration configuration;
 
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,7 +43,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public final void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final RecyclerView.ViewHolder swipeHolder = holder;
         final SwipeItem swipeItem = (SwipeItem) swipeHolder.itemView;
-        SwipeConfiguration configuration = onCreateSwipeConfiguration(swipeItem.getContext(), position);
+        this.configuration = onCreateSwipeConfiguration(swipeItem.getContext(), position);
         swipeItem.setSwipeConfiguration(configuration);
         swipeItem.setSwipeListener(new SwipeItem.OnSwipeListener() {
             @Override
@@ -70,7 +70,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     };
                     synchronized (mRunnables) {
                         mRunnables.set(position, runnable);
-                        mHandler.postDelayed(runnable, TIME_POST_DELAYED);
+                        mHandler.postDelayed(runnable, configuration.getLeftUndoDuration());
                     }
                 }
             }
@@ -89,7 +89,7 @@ public abstract class SwipeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     };
                     synchronized (mRunnables) {
                         mRunnables.set(position, runnable);
-                        mHandler.postDelayed(runnable, TIME_POST_DELAYED);
+                        mHandler.postDelayed(runnable, configuration.getRightUndoDuration());
                     }
                 }
             }
